@@ -1,0 +1,458 @@
+
+%Schriftgroesse, Layout, Papierformat, Art des Dokumentes
+%Hinweis: statt oneside einfach twoside für doppelseitigen druck!
+\documentclass[12pt,oneside,a4paper,bibtotoc,liststotoc,pointlessnumbers]{scrartcl}
+
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[german]{babel}
+
+%etwas schoenere serifen-schrift (mit schnoerkel)
+%
+%\usepackage[T1]{fontenc}
+%\usepackage{palatino}
+%\usepackage{microtype}
+
+%bei vielen problemen mit trennung von woertern... macht, dass wörter nicht andauernd getrennt werden
+\sloppy
+
+%standard typewriter-font (fuer url oder code) 
+\renewcommand\ttdefault{cmtt}
+
+%Wer fuer Ueberschriften eine Schrift ohne Schnoerkel will,
+%bitte folgende Zeile aktivieren:
+\renewcommand\sfdefault{cmss}
+
+%Ansonsten aktivieren wir die normale Serifen-Schrift fuer die Ueberschriften
+%\renewcommand\sfdefault{cmr}
+
+%Ansonsten aktivieren wir die Serifen-Schrift palatino fuerr die Ueberschriften
+%oben muss \usepackage{palotino} aktiviert sein!
+%\renewcommand\sfdefault{ppl}
+
+
+%Einstellungen der Seitenraender
+\usepackage[inner=3.0cm,outer=3.0cm,top=3cm,bottom=2.5cm]{geometry}
+
+%fürs Binden ...
+%\usepackage[inner=3.0cm,outer=3.0cm,top=3cm,bottom=2.5cm]{geometry}
+
+%neue Rechtschreibung
+%\usepackage{ngerman}
+
+%Umlaute ermoeglichen, je nach Fileformat UTF8 oder ANSI
+%\usepackage[utf8]{inputenc}
+%\usepackage[ansinew]{inputenc}
+
+\usepackage[utf8]{inputenc}
+\usepackage[german]{babel}
+
+%\usepackage{amsmath}
+%\usepackage{txfonts}
+
+%Kopf- und Fusszeile
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+%Kopfzeile links bzw. innen
+\fancyhead[LO,RE]{\nouppercase{\leftmark}}
+%Kopfzeile rechts bzw. auÃen
+\fancyhead[RO,LE]{\thepage}
+%Linie oben
+\renewcommand{\headrulewidth}{0.5pt}
+
+%Linie unten - bei mir auskommentiert wegen Fussnoten zur Literatur
+%\renewcommand{\footrulewidth}{0.5pt}
+
+%Fuer URLs in einer monospace typewriter font. Verwendung: \url{www.hallo.de}
+\usepackage{url}
+
+%externe PDFs einbinden
+%\usepackage{pdfpages}
+  
+%Paket zur Modifizierung der Fussnote. perpage resettet den Counter pro Seite neu
+%\usepackage[
+ %  bottom,      % Footnotes appear always on bottom. This is necessary
+                % especially when floats are used
+   %stable,      % Make footnotes stable in section titles
+  % perpage,     % Reset on each page
+   %para,       % Place footnotes side by side of in one paragraph.
+   %side,       % Place footnotes in the margin
+   %ragged,      % Use RaggedRight
+   %norule,     % suppress rule above footnotes
+  % multiple,    % rearrange multiple footnotes intelligent in the text.
+   %symbol,     % use symbols instead of numbers
+%]%{footmisc} 
+
+%Macht Fuï¿œnotenhinweiï¿œe im wikipedia-Format: hochgestellte kleine Zahl in eckigen Klammern
+%Fuer nur hochgestellte kleine Zahlen: diese beiden Zeilen auskommentieren
+%\deffootnotemark{\textsuperscript{[\thefootnotemark]}}
+%\deffootnote[1em]{1.5em}{1em}{\textsuperscript{[\thefootnotemark]}}
+
+%Fuer die Biblitothekseinbindung, kann so gelassen werden, da der naechste Befehl eigentlich alles regelt
+%\usepackage[%
+   %round,   %(default) for round parentheses;
+ %  square,   % for square brackets;
+   %curly,   % for curly braces;
+   %angle,   % for angle brackets;
+   %colon,   % (default) to separate multiple citations with colons;
+  % comma,   % to use commas as separaters;
+   %authoryear,% (default) for author-year citations;
+   %numbers,   % for numerical citations;
+   %super,   % for superscripted numerical citations, as in Nature;
+   %sort,      % orders multiple citations into the sequence in which they appear in the list of references;
+   %sort&compress,    % as sort but in addition multiple numerical citations
+                   % are compressed if possible (as 3-6, 15);
+   %longnamesfirst,  % makes the first citation of any reference the equivalent of
+                   % the starred variant (full author list) and subsequent citations
+                   %normal (abbreviated list);
+   %sectionbib,      % redefines \thebibliography to issue \section* instead of \chapter*;
+                   % valid only for classes with a \chapter command;
+                   % to be used with the chapterbib package;
+   %nonamebreak,     % keeps all the authors names in a citation on one line;
+                   %causes overfull hboxes but helps with some hyperref problems.
+%]{natbib} 
+
+%Festlegung Art der Zitierung - alphanumerische DIN-Methode: Abkuerzung Autor + Jahr
+%\bibliographystyle{alphadin}
+
+%zum Zitieren
+%\usepackage{cite}
+
+%Fuer das Glossar - noch nicht Benutzt...
+%\usepackage[toc,acronym, section=section, nonumberlist]{glossaries}
+
+%Fuer 1,5-fachen Zeilenabstand
+%\RequirePackage{setspace}
+%\onehalfspacing
+
+%folgende Woerter werden von latex NICHT mehr getrennt, sehr praktisch
+%mehrere woerter durch leerzeichen trennen, fuer mehrsilbige woerter kann 
+%man mit - an den "trennpunkten" unterteilen
+%\hyphenation{Java Giesecke Devrient Hash-funk-tion Hash-funk-tionen Hash-wert CryptoApi PCGQueueServer PCGCryptoApi CryptoApi PCGRequestQueue PCGDatabaseUtil}
+
+
+\setlength{\abovecaptionskip}{1.0ex} % Abstand ueber Bildbeschriftung
+\setlength{\belowcaptionskip}{0.5ex} % Abstand unter Bildbeschriftung
+\setlength{\parindent}{0pt}			% Absatzeinrueckung (keine)
+\setlength{\parskip}{6pt}		
+
+%Inhaltsverzeichnis: kleine roemische Zahlen
+\newenvironment{inhaltsverzeichnis}{
+\pagenumbering{roman}	
+%\pagestyle{fancy}
+}
+
+
+\usepackage{listings}		% fuerr Quelltext
+\usepackage{caption3}		% Bildbeschriftung
+\usepackage{xcolor} % Farbe
+\usepackage{graphicx} % -> bilder!
+
+% Fussnotenlinie
+%Formatierungsregeln fuer Listings
+\lstset{%
+language=java, %Setzt die Sprache
+basicstyle=\scriptsize,% Setzt den Standardstil
+keywordstyle=\color{black}\bfseries, % Setzt den Stil fuer Schluesselwoerter
+identifierstyle=, % Identifier bekommen keine gesonderte formatierung
+commentstyle=\color{black}, % Stil fuer Kommentare
+stringstyle=\ttfamily, % Stil fuer Strings (gekennzeichnet mit"String")
+breaklines=true, % Zeilen werden umgebrochen
+numbers=left, % Zeilennummern links
+numberstyle=\tiny, % Stil fuer die Seitennummern
+frame=single, % Rahmen
+backgroundcolor=\color{white}, % Hintergrundfarbe
+%caption={Java-Code} % Caption
+}
+
+%\usepackage[%
+%		pdftex,
+%		colorlinks,
+ %   bookmarks, 
+ %   bookmarksnumbered=true, 
+ %   bookmarksopen=true, 
+%    bookmarksopenlevel=1,
+%    hyperfootnotes=true,
+%		linkcolor=black, %standard red
+%		citecolor=black, %standard green
+%		urlcolor=black, %standard cyan
+%		filecolor=black, %  
+   % menubordercolor={0 1 1},    
+   % urlbordercolor={1 0 0}      
+ %   hyperfootnotes=true,
+ %   hyperindex=true,
+ %   pdfpagelayout=OneColumn, 
+ %   plainpages=false, 
+ %   pdfpagelabels,
+  %  pdfusetitle,
+ %   pdfstartpage={1},
+ %   pdfstartview={FitV},
+  %  pdfauthor={},
+ %   pdftitle={Bachelorarbeit}  
+%]{hyperref}
+
+\renewcommand{\footnoterule}{\vfill\rule{7.3cm}{0.5pt}\vspace{1ex}}	
+
+%Erneuerung des Namens fuer das Listingsverzeichnis von "Listings" -> "Listingsverzeichnis"
+\renewcommand{\lstlistlistingname}{Listingsverzeichnis}
+
+\renewcommand\figurename{Abb.}
+
+%\renewcommand\listfigurename{Diagrammverzeichnis}}
+
+%Erneuerung des Namens fuer das Literaturverzeichnis von "Literatur" -> "Literaturverzeichnis"
+\renewcommand\refname{Literaturverzeichnis}
+
+\usepackage{epstopdf}
+%\usepackage{subfigure}
+%Los gehts
+\begin{document}
+
+
+%%Titelseite -> muss durch FH-Vorlage ersetzt oder an diese angepasst werden
+%\title{
+%\includegraphics[scale=0.16]{hs.pdf} \qquad  \includegraphics[scale=0.35]{pics/gd.eps}  \\ \vspace*{50pt}
+%Bachelorarbeit in Informatik \\ \vspace*{30pt} \textbf{Generierung sicherer Produktcodes in einer serviceorientieren Client-Server-Architektur} \\ 
+%%\includegraphics[scale=1.0]{pics/giesecke_devrient_ger.png} \\
+%}
+%\author{Benedikt Lippert}
+%\thispagestyle{empty}
+%\maketitle
+%\thispagestyle{empty}
+
+%\hypertarget{title}{}
+%\pdfbookmark[1]{Titelblatt}{title}
+\thispagestyle{empty}
+
+\begin{center}
+\includegraphics[scale=0.16]{hs.pdf}\\
+\vspace*{10pt}
+\textsf{\textbf{\large{Hochschule Landshut}}}\\
+\textsf{\normalsize{Fakultät Informatik \\ Studiengang Informatik (Master)}}\\
+%Falls noch ein Firmenlogo reinsoll, folgenden Block einkommentieren und Bild und Titel tauschen.
+%Achtung: vspaces müssen dann angepasst werden danach, sonst rutscht alles unten raus
+%\vspace*{40pt}
+%\includegraphics[scale=0.16]{pics/hs.pdf}\\
+%\vspace*{10pt}
+%\textbf{\large{Firma}}\\
+%\normalsize{ggf. Abteilung}\\
+\vspace*{70pt}
+\textsf{\textbf{\Huge{Pflichtenheft zum Studienprojekt}}} \\
+\vspace*{20pt}
+\textsf{\textbf{\large{Verteilter Dateisynchronisationsdienst \vspace*{20pt} Synchrony}}}\\\end{center}
+\vspace*{180pt}
+
+\textsf{\large{Stand: 11.05.2010}}\\
+\vspace*{20pt}
+\\ 
+
+Teilnehmer: \hspace*{0.5cm}Simon Bauer, Michael Bien, Siegfried Hable,\\
+\hspace*{2.75cm}Benedikt Lippert, Markus Grundl\\
+%\vspace*{6pt}
+
+Betreuer: \hspace*{0.95cm}Prof. Dr. Wolfgang Jürgensen\\
+
+
+
+
+\newpage
+\thispagestyle{empty}
+%\mbox{}
+%\newpage
+
+
+%\hypertarget{abstract}{}
+%\pdfbookmark[1]{Kurzzusammenfassung / Abstract}{abstract}
+\thispagestyle{empty}
+\section*{Kurzzusammenfassung}
+Text Text ...
+\section*{Abstract}
+Wenn gewünscht, auch noch eine englische Zusammenfassung...
+
+\newpage
+%\thispagestyle{empty}
+%\mbox{}
+%\newpage
+
+\begin{inhaltsverzeichnis}
+\clearpage% oder \cleardoublepage bei twoside
+\begingroup
+  %\pagestyle{plain}
+ % \pdfbookmark[1]{Inhaltsverzeichnis}{toc}
+  \tableofcontents
+  %\cleardoublepage
+\endgroup
+
+\end{inhaltsverzeichnis}
+
+\newpage
+%\thispagestyle{empty}
+%\mbox{}
+%\newpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+%\newpage
+
+\section{Kapitelüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Abschnittsüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Abschnittsüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Abschnittsüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+\section{Kapitelüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Abschnittsüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Abschnittsüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Abschnittsüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+\section{Kapitelüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Abschnittsüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Abschnittsüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Abschnittsüberschrift}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+\newpage
+%\thispagestyle{empty}
+%\mbox{}
+%\newpage
+
+%\newpage
+\listoffigures
+
+\newpage
+%\thispagestyle{empty}
+%\mbox{}
+%\newpage
+
+%\newpage
+\listoftables
+
+%\newpage
+%\thispagestyle{empty}
+%\mbox{}
+%\newpage
+
+%\newpage
+%\lstlistoflistings
+
+\newpage
+%\thispagestyle{empty}
+%\mbox{}
+%\newpage
+
+%\setcounter{secnumdepth}{1} 
+%Anhang!
+\begin{appendix}
+\pagenumbering{Roman}	
+
+%\setcounter{figure}{0}
+
+
+\section{Anhang: Beispiel AES-Verschlüsselung mit der Sun JCE}
+AES-Verschlüsselung mit der Sun JCE
+Einkommentieren !
+%\lstinputlisting[captionpos=b, caption=JCE AES Example]{listings/appendix/1_jcaAesExample.java}
+%
+%Beispiel HMAC-MD5 aus der Sun JCE
+%\lstinputlisting*[captionpos=b, caption=JCE HMAC-MD5 Example]{listings/0_hmacmd5_example.java}
+
+%Listings können, anders als Grafiken und Tabellen nicht
+%per * aus dem Listingsverzeichnis herausgelassen werden!
+%Falls ein Listing (z. B. im Anhang) nicht in das Verzeichnis
+%soll muss getrickst werden: 
+%	1. Auskommentieren der Listings im Anhang -> pro Listing ein \newpage,
+%	dass die Seitenzahl des Anhangs gleich bleibt
+% 2. Setzen, sodass nur noch Listings des eigentlichen Dokuments im VZ
+%	WICHTIG: PDF jetzt wegspeichern!
+% 3. Änderungen von 1. rückgängig machen, alles setzen, sodass Anhang wieder passt
+% Das eigentliche, resultieren Dokument setzt sich jetzt aus dem PDF von 2.
+% (inkl. Listingsverzeichnis) + Anhang von 3. zusammen
+% Besserer Weg?!?!?
+
+\newpage
+%\thispagestyle{empty}
+%\mbox{}
+%\newpage
+
+
+\section{Anhang: Abbildung JMX-Konsole}
+\begin{figure}[h]					
+\centering
+Einkommentieren!
+%\includegraphics[scale=0.75]{pics/7_jmx_console.png}		% Grafikeinbindung mit Dateiname und Groessenangabe			% ([width=], [height=], [scale=1.00]...)
+\caption{Screenshot der JMX-Weboberfläche}		% Bildbeschriftung
+\label{fig:Fabrikmethode}							% Sprungmarke fuer Verweise
+\end{figure} 	\vspace{-12pt}
+
+\newpage
+%\thispagestyle{empty}
+%\mbox{}
+%\newpage
+
+
+
+\newpage
+\section{Anhang: verschiedene LaTeX-Tests}
+%Fussnoten-Tests:
+%\footnote{\citep[vgl. ][S. 1]{Schmeh2009}}
+%\footnote{\citep[vgl. ][S. 23]{Schmeh2009}}
+%\footnote{\citep[vgl. ][S. 1-100]{Schneier1996}}
+%\footnote{\citep[vgl. ][S. 1]{Monson-Haefel2009}}
+%\citep[vgl. ][S. 1]{Langner2006}
+%\citep[vgl. ][S. 1]{Lipp2000}
+%\citep[vgl. ][S. 1]{Backschat2007}
+%\footnote{\citep[vgl. ][]{Schneier1996}}
+
+%nocite bewirkt,d ass das ganze bib geschrieben wird, auch wenn noch keine cites (referenz) im text auf jedes element existieren
+\nocite{*}
+
+\newpage
+Folgendes Bild ist im Abbildungsverzeichnis:
+\begin{figure}[h]							
+\centering 
+Einkommentieren!
+%\includegraphics[scale=1.0]{pics/giesecke_devrient_ger.png}		% Grafikeinbindung mit Dateiname und Groessenangabe												% ([width=], [height=], [scale=1.00]...)
+\caption{Logo von Giesecke \& Devrient}									% Bildbeschriftung
+\label{fig:LogoGD}												% Sprungmarke fuer Verweise
+\end{figure}
+
+Folgendes Bild ist NICHT im Abbildungsverzeichnis: \\ %einfach  den figure-mantel weglassen
+\begin{center}
+Einkommentieren!
+%\includegraphics*[scale=1.0]{pics/giesecke_devrient_ger.png}	
+\end{center}
+
+Tabellenobjekt: hier ist ein Bild in einer Tabelle mit einer Spalte und einer Zelle:
+So können z.B. Tabellen, die als Bilddatei vorliegen als Tabelle betitelt und auch ins Tabellen-VZ aufgenommen werden.
+\begin{table}[h]							
+\centering 
+Einkommentieren!
+%\includegraphics[scale=1.0]{pics/giesecke_devrient_ger.png}		% Grafikeinbindung mit Dateiname und Groessenangabe													% ([width=], [height=], [scale=1.00]...)
+\caption{Logo von Giesecke \& Devrient als Tabelle deklariert}									% Bildbeschriftung
+\label{fig:LogoGD}												% Sprungmarke fuer Verweise
+\end{table}
+
+
+
+
+\end{appendix}
+%\end{anhang}
+
+%\newpage
+%\thispagestyle{empty}
+%\mbox{}
+
+\end{document}
