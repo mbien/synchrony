@@ -3,5 +3,6 @@
 *.lot
 *.log
 *.toc
+*.out
 pflichtenheft.pdf
 doku.pdf

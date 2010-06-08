@@ -167,18 +167,21 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
 %caption={Java-Code} % Caption
 }
 
-%\usepackage[%
-%		pdftex,
-%		colorlinks,
- %   bookmarks, 
- %   bookmarksnumbered=true, 
- %   bookmarksopen=true, 
-%    bookmarksopenlevel=1,
+\definecolor{darkblue}{rgb}{0,0,.5}
+\definecolor{darkred}{rgb}{.8,0,0}
+
+\usepackage[%
+		pdftex,
+		colorlinks,
+ %  bookmarks, 
+    bookmarksnumbered=true, 
+    bookmarksopen=true, 
+    bookmarksopenlevel=1,
 %    hyperfootnotes=true,
-%		linkcolor=black, %standard red
-%		citecolor=black, %standard green
-%		urlcolor=black, %standard cyan
-%		filecolor=black, %  
+		linkcolor=darkred, %standard red,
+		citecolor=darkred, %standard green
+		urlcolor=darkred, %standard cyan
+		filecolor=darkred, %  
    % menubordercolor={0 1 1},    
    % urlbordercolor={1 0 0}      
  %   hyperfootnotes=true,
@@ -186,12 +189,12 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
  %   pdfpagelayout=OneColumn, 
  %   plainpages=false, 
  %   pdfpagelabels,
-  %  pdfusetitle,
- %   pdfstartpage={1},
- %   pdfstartview={FitV},
+    pdfusetitle,
+    pdfstartpage={1},
+    pdfstartview={FitV},
   %  pdfauthor={},
- %   pdftitle={Bachelorarbeit}  
-%]{hyperref}
+  %  pdftitle={Bachelorarbeit}  
+]{hyperref}
 
 \renewcommand{\footnoterule}{\vfill\rule{7.3cm}{0.5pt}\vspace{1ex}}	
 
@@ -244,12 +247,12 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
 \textsf{\textbf{\large{Verteilter Dateisynchronisationsdienst \vspace*{20pt} Synchrony}}}\\\end{center}
 \vspace*{180pt}
 
-\textsf{\large{Stand: 11.05.2010}}\\
+\textsf{\large{Stand: 31.05.2010}}\\
 \vspace*{20pt}
 \\ 
 
-Teilnehmer: \hspace*{0.5cm}Simon Bauer, Michael Bien, Siegfried Hable,\\
-\hspace*{2.75cm}Benedikt Lippert, Markus Grundl\\
+Teilnehmer: \hspace*{0.5cm}Simon Bauer, Michael Bien, Markus Grundl, \\
+\hspace*{2.75cm}Siegfried Hable, Benedikt Lippert \\
 %\vspace*{6pt}
 
 Betreuer: \hspace*{0.95cm}Prof. Dr. Wolfgang Jürgensen\\
@@ -267,9 +270,10 @@ Betreuer: \hspace*{0.95cm}Prof. Dr. Wolfgang Jürgensen\\
 %\pdfbookmark[1]{Kurzzusammenfassung / Abstract}{abstract}
 \thispagestyle{empty}
 \section*{Kurzzusammenfassung}
-Text Text ...
-\section*{Abstract}
-Wenn gewünscht, auch noch eine englische Zusammenfassung...
+Dies ist das Pflichtenheft zum Studienprojekt des Master-Studiengangs SS2010/WS2011 mit dem Titel "Verteilter Dateisynchronisationsdienst".\par
+Dieses Pflichtenheft ist nach dem Gliederungsvorschlag von Prof. Dr. Helmut Balzert (Ruhr-Universität Bochum) aus seinem Buch "Lehrbuch der Softwaretechnik"\footnote{Helmut Balzert - Lehrbuch der Softwaretechnik \url{http://amazon.de/o/ASIN/3827417058/}} strukturiert und gibt eine Übersicht der Anforderungen an der in diesem Studienprojekt zu realisierenden Softwarekomponente.
+%\section*{Abstract}
+%Wenn gewünscht, auch noch eine englische Zusammenfassung...
 
 \newpage
 %\thispagestyle{empty}
@@ -298,35 +302,71 @@ Wenn gewünscht, auch noch eine englische Zusammenfassung...
 %\newpage
 
 \section{Zielbestimmung}
+Synchrony ist eine Software zum Synchronsieren von Verzeichnissen und Dateien.
+Die Anwendung ermöglicht Datenbestände zwischen verschiedenen Geräten synchron zu halten.
+Synchrony stellt eine benutzerfreundliche Benutzeroberfläche zur Verfügung. Diese dient dazu
+zu synchronsierende Ordner anzugeben und den Synchronisationsdienst zu aktivieren. Ist der Dienst auf
+den jeweiligen Geräten aktiv, so läuft der Abgleich der Daten im Hintergrund ab. Die Verzeichnisse 
+werden dabei in beiden Richtungen abgeglichen.
 \subsection{Muss-Kriterien}
-Datei-Synchronisation zwischen zwei Rechner (kein Mount!)
+Die im Folgenden genannten Punkte stellen unabdingbare Produktleistungen dar:
+\begin{itemize}
+\item Der Benutzer kann Dateien zwischen zwei Rechnern synchronisieren. (kein Mount!)
+\item Der Benutzer kann den Synchronisationsdienst konfigurieren.
+\item Bei der Installation wird ein Account vergeben, der zur Identifikation im Netzwerk dient.
+\item Der Benutzer kann den Synchronisationsdienst aktiveren bzw. deaktivieren.
+\item Der Benutzer kann zu die Verzeichnisse, welche er synchronsieren will selbst bestimmen und verändern.
+\item Der Benutzer kann den Status der Synchronisation verfolgen.
+\item Der Benutzer kann wählen, ob die Oberfläche deutsch oder englischsprachig angezeigt wird.
+\item Nach einmaliger Konfiguration wird die Verbindung automatisch hergestellt und die  
+  nötigen Updates, nach Dateiänderungen, durchgeführt.
+\item Die Dateisynchronisation erfolgt auf Odnerebene, d.h. Dateien der Subordner werden ebenfalls
+  synchronsiert
+\end{itemize}
 \subsection{Optionale Kriterien}
-- Server: 'Social Sharing' - Mechanismus\\
-- Anbindung mobiler Clients (Android)\\
-- Anbindung an etablierte Protokolle
+\begin{itemize}
+\item Der Synchronsiationsdienst ist automatisch beim Start des Gerätes aktiv.
+\item Über einen Webserver wird ein ’Social Sharing’ - Mechanismus realisiert.
+\item Eine Anbindung mobiler Clients soll evaluiert werden. (z.B. Android, IPhone)
+\item Eine Anbindung an etablierte Protokolle soll evaluiert werden.
+\end{itemize}
 \subsection{Zielabgrenzung}
-- Anwendungszweck nicht identisch mit P2P (BitTorrent)
+\begin{itemize}
+\item Der Anwendungszweck ist nicht identisch mit P2P (BitTorrent), d.h. kein Filesharing-Protokoll, das sich besonders für die schnelle Verteilung großer Datenmengen eignet.
+\end{itemize}
 \newpage
 \section{Produkteinsatz}
 \subsection{Anwendungsbereich}
-Paar Sätze im Prosa, was die SW tun soll.
+Die Softwarekomponente soll Daten jeglicher Art synchron halten und replizieren können, d.h. sie ist auf keinen konkreten Anwendungsbereich limitiert oder auf einen solchen speziell zugeschnitten.\par
+Der Dienst ist jedoch, wie in Abschnitt 2.3 beschrieben wird, als Hintergrunddienst gedacht, um Dateien und Informationen zwischen verschiedenen Speicherlokationen zeitnah synchron zu halten und wird daher nicht als Vertriebskanal von großen Dateien (Stichwort Peer-to-Peer-Filesharing) entworfen. n
 \subsection{Zielgruppe}
-Anwender, die Dateien zwischen zwei Geräten synchron halten wollen.\\
-Bsp: Entwickler, Photographen ...
+Prinzipiell ist die für jeden Benutzertyp geeignet, die Dateien zwischen mehreren System synchron halten bzw. den Dienst zur Datensicherung verwenden wollen.\par
+Nachfolgend eine beispielhafte und nicht abgeschlossene Liste möglicher Anwender und Anwendungsszenarien der Softwarekomponente:
+\begin{itemize}
+	\item Software-Entwickler: Dateien wie z.B. zur Entwicklung von Software aus einem Projekt-Workspace werden zeitnah abgeglichen, sodass an einem anderen Arbeitsplatz weiterentwickelt werden kann.
+	\item Photographen: Beispielsweise können an einem Standort A geschossene Photos über eine mobile Internetverbindung mit einer Workstation am Standort B sofort betrachtet und bearbeitet werden. 
+	\item Lehrer/Professoren: Dokumente wie Übungsaufgaben o. Ä. können zwischen Systemen des Büros und des Heimarbeitsplatzes synchron gehalten werden.
+	\item Buchauthoren: Skripte, Notizen usw. können zwischen verschiedenen Geräten an verschiedenen Standorten synchronisiert und repliziert werden. 
+\end{itemize}
 \subsection{Betriebsbedingungen}
-- Systemdienst, im Hintergrund aktiv mit der User-Session des Anwenders\\
-- Wartungsfrei\\
-- User hat Steuerungspflicht
+Der Dateisynchronisationsdienst soll i.d.R. im Hintergrund als Benutzerdienst laufen und im Hintergrund aktiv sein. Der Dienst wird daher i.d.R. beim Einloggen des Anwenders gestartet.\par
+Der Benutzer hat aber auch Möglichkeiten der Steuerung des Dienstes über eine graphische Schnittstelle (GUI), die später im Dokument genauer spezifiziert wird.\par
+Das Ausführen der eigentlichen Funktion des Dienstes bedarf aber keiner Aktion des Benutzers.
+
 \newpage
 \section{Produktumgebung}
-Produktumgebung
 \subsection{Software}
-Software:\\
--allg.: kompatibles Filesystem\\
-- Desktop: \hspace*{2cm} -NW-Anschluss \\-Java 7 RE\\
-- Mobiler Client: \hspace*{2cm} -aktuelles Android-BS mit Unterstützung der SW \\-Nw-Verbindung (wireless)
+Synchrony stellt folgende Anforderungen an das System hinsichtlich softwareseitiger Unterstützung:
+\begin{itemize}
+	\item Java Runtime Environment 7 oder höher
+	\item ein mit der Dateisystem-API von Java 7 kompatibles Dateisystem
+	\item für die Verwendung der graphischen Schnittstelle (GUI) muss ein kompatibles Betriebssystem/Windows-Manager vorhanden sein
+\end{itemize}
 \subsection{Hardware}
-keine besonderen Anforderungen
+Die Voraussetzungen hinsichtlich der Hardware sind folgendermaßen:
+\begin{itemize}
+	\item stabile und leistungsfähige Netzwerk- bzw. Internetverbindung, je nach Einsatzszenario
+	\item ein ausreichend leistungsfähiges System um Datenkopiervorgänge im Hintergrund durchführen zu können ohne die normale Nutzung zu beeinträchtigen\end{itemize}
 \newpage
 \section{Produktfunktionen}
 \subsection{Funktionalitäten}
@@ -350,7 +390,33 @@ Text: Ziel der SW aus USER-Sicht\\
 -Systemnotifications (BS-abhängig), aber optional
 \newpage
 \section{Qualitätsbestimmungen}
-Matrix siehe Bsp (URL in eMail)
+
+\begin{table}[h]							
+\begin{center}
+ \begin{tabular}{l|c|c|c|c}
+  ~ & sehr wichtig & wichtig & weniger wichtig & unwichtig\\
+  \hline \hline
+  Robustheit~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \hline
+  Zuverlässigkeit~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \hline
+  Korrektheit~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \hline
+  Benutzungsfreundlichkeit~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \hline
+  Effizienz~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \hline
+  Portierbarkeit~ &  ~ ~ ~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ \\
+  \hline
+  Kompatibilität~ &  ~ ~ ~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ \\
+ \end{tabular}
+\end{center}
+\caption{Matrix der Qualitätsanforderungen}									% Bildbeschriftung
+\label{fig:LogoGD}												% Sprungmarke fuer Verweise
+\end{table}
+
+
+\
 \newpage
 \section{Testfälle}
 TEst driven Development; Junit-Tests -> Destdescription
@@ -401,7 +467,7 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 %\setcounter{figure}{0}
 
 
-\section{Anhang: Beispiel AES-Verschlüsselung mit der Sun JCE}
+\section{Anhang: der erste Anhang}
 AES-Verschlüsselung mit der Sun JCE
 Einkommentieren !
 %\lstinputlisting[captionpos=b, caption=JCE AES Example]{listings/appendix/1_jcaAesExample.java}
@@ -428,7 +494,7 @@ Einkommentieren !
 %\newpage
 
 
-\section{Anhang: Abbildung JMX-Konsole}
+\section{Anhang: der zweite Anhang}
 \begin{figure}[h]					
 \centering
 Einkommentieren!
@@ -445,7 +511,7 @@ Einkommentieren!
 
 
 \newpage
-\section{Anhang: verschiedene LaTeX-Tests}
+\section{Anhang: der dritte Anhang}
 %Fussnoten-Tests:
 %\footnote{\citep[vgl. ][S. 1]{Schmeh2009}}
 %\footnote{\citep[vgl. ][S. 23]{Schmeh2009}}
@@ -477,13 +543,14 @@ Einkommentieren!
 
 Tabellenobjekt: hier ist ein Bild in einer Tabelle mit einer Spalte und einer Zelle:
 So können z.B. Tabellen, die als Bilddatei vorliegen als Tabelle betitelt und auch ins Tabellen-VZ aufgenommen werden.
-\begin{table}[h]							
-\centering 
-Einkommentieren!
+%\begin{table}[h]							
+%\centering 
+%Einkommentieren!
 %\includegraphics[scale=1.0]{pics/giesecke_devrient_ger.png}		% Grafikeinbindung mit Dateiname und Groessenangabe													% ([width=], [height=], [scale=1.00]...)
-\caption{Logo von Giesecke \& Devrient als Tabelle deklariert}									% Bildbeschriftung
-\label{fig:LogoGD}												% Sprungmarke fuer Verweise
-\end{table}
+%
+%\caption{Logo von Giesecke \& Devrient als Tabelle deklariert}									% Bildbeschriftung
+%\label{fig:LogoGD}												% Sprungmarke fuer Verweise
+%\end{table}
 
 
 
