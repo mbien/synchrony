@@ -148,7 +148,7 @@
 \usepackage{listings}		% fuerr Quelltext
 \usepackage{caption3}		% Bildbeschriftung
 \usepackage{xcolor} % Farbe
-\usepackage{graphicx} % -> bilder!
+\usepackage[pdftex]{graphicx} % -> bilder!
 
 % Fussnotenlinie
 %Formatierungsregeln fuer Listings
@@ -241,7 +241,8 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
 \vspace*{70pt}
 \textsf{\textbf{\Huge{Pflichtenheft zum Studienprojekt}}} \\
 \vspace*{20pt}
-\textsf{\textbf{\large{Verteilter Dateisynchronisationsdienst \vspace*{20pt} Synchrony}}}\\\end{center}
+\textsf{\textbf{\large{Verteilter Dateisynchronisationsdienst \vspace*{20pt} Synchrony}}}\\
+\end{center}
 \vspace*{180pt}
 
 \textsf{\large{Stand: 11.05.2010}}\\
@@ -330,12 +331,43 @@ keine besonderen Anforderungen
 \newpage
 \section{Produktfunktionen}
 \subsection{Funktionalitäten}
-Text: Ziel der SW aus USER-Sicht\\
--Was tut es?\\
--Infü über Aktivität im System-Icon
+Grundlegendes Ziel der Anwendung ist es Daten zu synchronisieren. Unter Daten ist
+in diesem Zusammenhang eine permanent, physisch auf einem nicht-fl\"{u}chtigem Datentr\"{a}ger
+gespeicherte, Sammlung von lesbaren Informationen zu verstehen. Im Normallfall sind
+dies Dateien, Verzeichnisse oder ganze Partitionen. Diese k\"{o}nnen auf r\"{a}mlich
+voneinander getrennten Speichermedien abgelegt sein, und m\"{u}ssen auch nicht
+dasselbe Betriebssystem als Grundlage aufweisen.\\
+\emph{Synchrony} gleicht diese Daten miteinander ab, und bringt, entsprechend den
+eingestellten Vorgaben, diese auf einen einheitlichen Stand. Bei einem nicht
+klar definierten Zustand zweier Datenmengen kann der User manuell eingreifen.
+
+Es besteht die M\"{o}glichkeit sich das laufende Programm als System-Icon in die
+Kontrollleiste des Systems einbetten zu lassen. Das (mit der rechten Maustaste
+aufklappbare) Menue soll unter anderem folgende Eintr\"{a}ge enthalten:
+\begin{itemize}
+ \item Beenden der Anwendung
+\item Wiederherstellen
+\item Sofort synchronisieren
+\item Einstellungen
+\item Status
+\item Info
+\end{itemize}
+
+%Text: Ziel der SW aus USER-Sicht\\
+%-Was tut es?\\
+%-Infü über Aktivität im System-Icon
 \subsection{Konfiguration}
--Konfig-file\\
--Einfache GUI zur konfiguration (Änderungen dann im Konfig-File, damit SW-Neustart überlebt werden + Logeintrag)
+Um bestimmte Einstellungen dauerhaft zu speichern wird eine globale
+Konfigurationsdatei \emph{(z.B. /etc/synchrony/syn.config)} angelegt, die aber bei
+Bedarf von der lokalen Konfiguration \emph{(z.B. ~./.synchrony/syn\_local.config)}
+\"{u}berschrieben wird.\\
+Um die Konfigurationsdateien anzupassen wird ein grafisches Frontend zur Verf\"{u}gung
+gestellt, in dem die Einstellungen abgerufen und modifiziert werden k\"{o}nnen. Dieses
+soll m\"{o}glichst einfach und \"{u}bersichtlich aufgebaut sein, um auch dem
+\glqq Normaluser\grqq\ eine, ohne lange Einarbeitungszeit, bedienbare Schnittstelle anzubieten.
+
+%-Konfig-file\\
+%-Einfache GUI zur konfiguration (Änderungen dann im Konfig-File, damit SW-Neustart überlebt werden + Logeintrag)
 \newpage
 \section{Produktdaten}
 - Hash-Trees in .synchrony\\
