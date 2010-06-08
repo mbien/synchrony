@@ -244,7 +244,8 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
 \vspace*{70pt}
 \textsf{\textbf{\Huge{Pflichtenheft zum Studienprojekt}}} \\
 \vspace*{20pt}
-\textsf{\textbf{\large{Verteilter Dateisynchronisationsdienst \vspace*{20pt} Synchrony}}}\\\end{center}
+\textsf{\textbf{\large{Verteilter Dateisynchronisationsdienst \vspace*{20pt} Synchrony}}}\\
+\end{center}
 \vspace*{180pt}
 
 \textsf{\large{Stand: 31.05.2010}}\\
@@ -253,7 +254,6 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
 
 Teilnehmer: \hspace*{0.5cm}Simon Bauer, Michael Bien, Markus Grundl, \\
 \hspace*{2.75cm}Siegfried Hable, Benedikt Lippert \\
-%\vspace*{6pt}
 
 Betreuer: \hspace*{0.95cm}Prof. Dr. Wolfgang Jürgensen\\
 
@@ -331,9 +331,7 @@ Die im Folgenden genannten Punkte stellen unabdingbare Produktleistungen dar:
 \item Eine Anbindung an etablierte Protokolle soll evaluiert werden.
 \end{itemize}
 \subsection{Zielabgrenzung}
-\begin{itemize}
-\item Der Anwendungszweck ist nicht identisch mit P2P (BitTorrent), d.h. kein Filesharing-Protokoll, das sich besonders für die schnelle Verteilung großer Datenmengen eignet.
-\end{itemize}
+Der Anwendungszweck ist nicht identisch mit P2P (Torrent), d.h. kein Filesharing-Protokoll, das sich besonders für die schnelle Verteilung großer Datenmengen eignet.
 \newpage
 \section{Produkteinsatz}
 \subsection{Anwendungsbereich}
@@ -366,7 +364,8 @@ Synchrony stellt folgende Anforderungen an das System hinsichtlich softwareseiti
 Die Voraussetzungen hinsichtlich der Hardware sind folgendermaßen:
 \begin{itemize}
 	\item stabile und leistungsfähige Netzwerk- bzw. Internetverbindung, je nach Einsatzszenario
-	\item ein ausreichend leistungsfähiges System um Datenkopiervorgänge im Hintergrund durchführen zu können ohne die normale Nutzung zu beeinträchtigen\end{itemize}
+	\item ein ausreichend leistungsfähiges System um Datenkopiervorgänge im Hintergrund durchführen zu können ohne die normale Nutzung zu beeinträchtigen
+\end{itemize}
 \newpage
 \section{Produktfunktionen}
 \subsection{Funktionalitäten}
@@ -419,10 +418,33 @@ Text: Ziel der SW aus USER-Sicht\\
 \
 \newpage
 \section{Testfälle}
-TEst driven Development; Junit-Tests -> Destdescription
+Die Testfälle werden jeweils vor der Programmierung einer Funktion überlegt und implementiert. Das Prinzip dahinter ist das sogenannte
+Test Driven Development, welches die Tests als Basis der Programmierung festlegt. Diese Vorgehensweise setzt von Anfang an die Qualität
+der Software in den Mittelpunkt und gewährleistet somit einen hohen Qualitätsstandard. Dadurch sind die Tests automatisch in den 
+Entwicklungsprozess mit einbezogen und einzelne Testfälle werden nicht vergessen. Die Tests werden mit sogenannten JUnit-Tests realisiert.
+%TEst driven Development; Junit-Tests -> Destdescription
 \newpage
 \section{Entwicklungsumgebung}
-Siehe Bsp für 1. Satz; ansonsten ist nur JDK 7 und Maven zu nennen, erklären
+\subsection{Software}
+Für die Entwicklung des Synchronisations-Tools synchrony wird die Entwicklungsumgebung NetBeans (Version 6.8) verwendet.
+synchrony wird in der Programmiersprache Java entwickelt - dazu wird auf den Entwicklungsrechnern JDK 7 installiert.
+Das Release von JDK 7 ist voraussichtlich im dritten Quartal 2010, wird aber aufgrund der neu hinzugekommenen File-API bereits für
+dieses Projekt verwendet. Datei-Operationen sind ein wesentlicher Bestandteil für synchrony und diese sind in Java 7 sehr effizient
+implementiert.
+
+Das Projektverwaltungswerkzeug Maven 2 (Version 2.2.1) wird installiert und ist zugleich als Plugin in NetBeans (ab Version 6.7) automatisch
+integriert. Maven wird zum Erstellen eines Software-Projektes verwendet und bietet eine Vielzahl an Plugins für z. B. die Verwaltung eines
+Projektes oder die Durchführung des Buildzyklus. Außerdem bietet Maven ein sehr komfortables Management der benötigten Bibliotheken, welche
+aus öffentlichen und privaten Repositories bezogen werden können, d. h. das manuelle Suchen der Bibliotheken entfällt somit.
+
+GitHub (Version 1.6.3.3) wird als Online-Versionskontrollsystem für die Verwaltung von Quellcode eingesetzt. Damit lässt sich die Zusammenarbeit im
+Team besser organisieren. GitHub ist eine OpenSource-Software, welche der GNU General Public License unterliegt.
+
+\subsection{Hardware}
+Die Entwicklung erfolgt auf unterschiedlichen Rechnern, allerdings mit dem gleichen Betriebssystem Ubuntu 9.04 - 10.04.
+Die Rechner-Hardware spielt keine entscheidende Rolle, es muss lediglich die Java Virtual Machine darauf laufen können. 
+
+%Siehe Bsp für 1. Satz; ansonsten ist nur JDK 7 und Maven zu nennen, erklären
 \newpage
 \section{Ergänzungen}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
