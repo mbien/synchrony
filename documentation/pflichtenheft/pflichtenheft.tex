@@ -408,16 +408,52 @@ soll m\"{o}glichst einfach und \"{u}bersichtlich aufgebaut sein, um auch dem
 %-Einfache GUI zur konfiguration (Änderungen dann im Konfig-File, damit SW-Neustart überlebt werden + Logeintrag)
 \newpage
 \section{Produktdaten}
-- Hash-Trees in .synchrony\\
-- Logfile
-\newpage
+Der Dienst benötigt bzw. erzeugt folgende, lokal gespeicherten Daten:
+\begin{itemize}
+    \item Datei Metainformationen
+    \item Konfigurationsdateien
+    \item Logdateien 
+\end{itemize}
+Die Datei-Metainformationen bestehen größtenteils aus Hashwerten über Teile und/oder die gesammte Datei.
+Die Hashwerte dienen als eindeutige Signatur der Datei im Netzwerk und gleichzeitig als Prüfsummen bei der
+Übertragung.
+
+
+Die Systemaktivität wird zwar in Form von Logfiles protokolliert, allerdings kann dadurch
+bei Standardeinstellungen die Kommunikation nicht nachvollzogen werden. Die Logfiles dienen
+primär zur Protokollierung evtl. auftretener Fehler.
 \section{Produktleistungen}
-- minimale Zugriffe auf HDD (Systemlast gering halten)\\
-- bei Versionskonflikten: - kein Datenverlust\\-Möglichkeit zur interaktiven Konfliktlösung
+Die Software verspricht
+\begin{itemize}
+    \item verlustfreie Dateisynchronisation,
+    \item minimale Festplattenzugriffe,
+    \item und das Erkennen und Auflösen von Versionskonflikten.
+\end{itemize}
 \newpage
 \section{Benutzeroberfläche}
-- Systemtray: startet Konfigfenster - start service - stop service - getStatus();\\
--Systemnotifications (BS-abhängig), aber optional
+Das System benötigt im Regelfall keinerlei Benutzerinteraktion. Zur Konfiguration
+wird ein ausblendbares Tray-Icon angeboten, über dieses der Benutzer auch den Dienst
+temporär pausieren oder beenden kann.
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{img/tray.png}
+    \caption{Tray-Icon}
+\end{figure}
+\\
+Der Dienst kann den Benutzer über systemabhängige Mechanismen über Ereignisse benachrichtigen.
+Ein Ereignis ist beispielweise das Auffinden einer neuen Datei auf einem entfernten Rechner
+oder erkannte Versionskonflikte. Die Häufigkeit der Benachrichtigungen kann angepasst werden.
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{img/notification.png}
+    \caption{Benachrichtigung}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{img/options.png}
+    \caption{Konfiguration des Dienstes}
+\end{figure}
+
 \newpage
 \section{Qualitätsbestimmungen}
 
