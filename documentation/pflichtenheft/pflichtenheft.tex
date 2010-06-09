@@ -248,7 +248,7 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
 \end{center}
 \vspace*{180pt}
 
-\textsf{\large{Stand: 31.05.2010}}\\
+\textsf{\large{Stand: 09.06.2010}}\\
 \vspace*{20pt}
 \\ 
 
@@ -372,41 +372,33 @@ Die Voraussetzungen hinsichtlich der Hardware sind folgendermaßen:
 Grundlegendes Ziel der Anwendung ist es Daten zu synchronisieren. Unter Daten ist
 in diesem Zusammenhang eine permanent, physisch auf einem nicht-fl\"{u}chtigem Datentr\"{a}ger
 gespeicherte, Sammlung von lesbaren Informationen zu verstehen. Im Normallfall sind
-dies Dateien, Verzeichnisse oder ganze Partitionen. Diese k\"{o}nnen auf r\"{a}mlich
+dies Dateien, Verzeichnisse oder ganze Partitionen. Diese k\"{o}nnen auf r\"{a}umlich
 voneinander getrennten Speichermedien abgelegt sein, und m\"{u}ssen auch nicht
-dasselbe Betriebssystem als Grundlage aufweisen.\\
+dasselbe Betriebssystem als Grundlage aufweisen.\par
 \emph{Synchrony} gleicht diese Daten miteinander ab, und bringt, entsprechend den
 eingestellten Vorgaben, diese auf einen einheitlichen Stand. Bei einem nicht
-klar definierten Zustand zweier Datenmengen kann der User manuell eingreifen.
-
+klar definierten Zustand zweier Datenmengen kann der User manuell eingreifen.\par
 Es besteht die M\"{o}glichkeit sich das laufende Programm als System-Icon in die
 Kontrollleiste des Systems einbetten zu lassen. Das (mit der rechten Maustaste
 aufklappbare) Menue soll unter anderem folgende Eintr\"{a}ge enthalten:
 \begin{itemize}
- \item Beenden der Anwendung
-\item Wiederherstellen
-\item Sofort synchronisieren
+\item Beenden der Anwendung
+\item Starten des Dienstes
+\item Stoppen des Dienstes
 \item Einstellungen
-\item Status
-\item Info
+\item Statusinfo
 \end{itemize}
 
-%Text: Ziel der SW aus USER-Sicht\\
-%-Was tut es?\\
-%-Infü über Aktivität im System-Icon
 \subsection{Konfiguration}
 Um bestimmte Einstellungen dauerhaft zu speichern wird eine globale
 Konfigurationsdatei \emph{(z.B. /etc/synchrony/syn.config)} angelegt, die aber bei
 Bedarf von der lokalen Konfiguration \emph{(z.B. ~./.synchrony/syn\_local.config)}
-\"{u}berschrieben wird.\\
+\"{u}berschrieben wird.\par
 Um die Konfigurationsdateien anzupassen wird ein grafisches Frontend zur Verf\"{u}gung
 gestellt, in dem die Einstellungen abgerufen und modifiziert werden k\"{o}nnen. Dieses
 soll m\"{o}glichst einfach und \"{u}bersichtlich aufgebaut sein, um auch dem
 \glqq Normaluser\grqq\ eine, ohne lange Einarbeitungszeit, bedienbare Schnittstelle anzubieten.
-
-%-Konfig-file\\
-%-Einfache GUI zur konfiguration (Änderungen dann im Konfig-File, damit SW-Neustart überlebt werden + Logeintrag)
-\newpage
+\newpage
 \section{Produktdaten}
 Der Dienst benötigt bzw. erzeugt folgende, lokal gespeicherten Daten:
 \begin{itemize}
@@ -414,14 +406,13 @@ Der Dienst benötigt bzw. erzeugt folgende, lokal gespeicherten Daten:
     \item Konfigurationsdateien
     \item Logdateien 
 \end{itemize}
-Die Datei-Metainformationen bestehen größtenteils aus Hashwerten über Teile und/oder die gesammte Datei.
+Die Datei-Metainformationen bestehen größtenteils aus Hashwerten über Teile und/oder die gesamte Datei.
 Die Hashwerte dienen als eindeutige Signatur der Datei im Netzwerk und gleichzeitig als Prüfsummen bei der
-Übertragung.
-
-
+Übertragung.\par
 Die Systemaktivität wird zwar in Form von Logfiles protokolliert, allerdings kann dadurch
 bei Standardeinstellungen die Kommunikation nicht nachvollzogen werden. Die Logfiles dienen
 primär zur Protokollierung evtl. auftretener Fehler.
+\newpage
 \section{Produktleistungen}
 Die Software verspricht
 \begin{itemize}
@@ -454,9 +445,10 @@ oder erkannte Versionskonflikte. Die Häufigkeit der Benachrichtigungen kann ang
     \caption{Konfiguration des Dienstes}
 \end{figure}
 
+\clearpage
+
 \newpage
 \section{Qualitätsbestimmungen}
-
 \begin{table}[h]							
 \begin{center}
  \begin{tabular}{l|c|c|c|c}
@@ -478,18 +470,16 @@ oder erkannte Versionskonflikte. Die Häufigkeit der Benachrichtigungen kann ang
  \end{tabular}
 \end{center}
 \caption{Matrix der Qualitätsanforderungen}									% Bildbeschriftung
-\label{fig:LogoGD}												% Sprungmarke fuer Verweise
+\label{fig:Qualitaet}												% Sprungmarke fuer Verweise
 \end{table}
-
-
-\
+
 \newpage
 \section{Testfälle}
 Die Testfälle werden jeweils vor der Programmierung einer Funktion überlegt und implementiert. Das Prinzip dahinter ist das sogenannte
 Test Driven Development, welches die Tests als Basis der Programmierung festlegt. Diese Vorgehensweise setzt von Anfang an die Qualität
 der Software in den Mittelpunkt und gewährleistet somit einen hohen Qualitätsstandard. Dadurch sind die Tests automatisch in den 
 Entwicklungsprozess mit einbezogen und einzelne Testfälle werden nicht vergessen. Die Tests werden mit sogenannten JUnit-Tests realisiert.
-%TEst driven Development; Junit-Tests -> Destdescription
+
 \newpage
 \section{Entwicklungsumgebung}
 \subsection{Software}
@@ -511,144 +501,10 @@ Team besser organisieren. GitHub ist eine OpenSource-Software, welche der GNU Ge
 Die Entwicklung erfolgt auf unterschiedlichen Rechnern, allerdings mit dem gleichen Betriebssystem Ubuntu 9.04 - 10.04.
 Die Rechner-Hardware spielt keine entscheidende Rolle, es muss lediglich die Java Virtual Machine darauf laufen können. 
 
-%Siehe Bsp für 1. Satz; ansonsten ist nur JDK 7 und Maven zu nennen, erklären
 \newpage
-\section{Ergänzungen}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-\newpage
-\section{Glossar}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-
-\newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-%\newpage
 \listoffigures
 
 \newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-%\newpage
 \listoftables
-
-%\newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-%\newpage
-%\lstlistoflistings
-
-\newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-%\setcounter{secnumdepth}{1} 
-%Anhang!
-\begin{appendix}
-\pagenumbering{Roman}	
-
-%\setcounter{figure}{0}
-
-
-\section{Anhang: der erste Anhang}
-AES-Verschlüsselung mit der Sun JCE
-Einkommentieren !
-%\lstinputlisting[captionpos=b, caption=JCE AES Example]{listings/appendix/1_jcaAesExample.java}
-%
-%Beispiel HMAC-MD5 aus der Sun JCE
-%\lstinputlisting*[captionpos=b, caption=JCE HMAC-MD5 Example]{listings/0_hmacmd5_example.java}
-
-%Listings können, anders als Grafiken und Tabellen nicht
-%per * aus dem Listingsverzeichnis herausgelassen werden!
-%Falls ein Listing (z. B. im Anhang) nicht in das Verzeichnis
-%soll muss getrickst werden: 
-%	1. Auskommentieren der Listings im Anhang -> pro Listing ein \newpage,
-%	dass die Seitenzahl des Anhangs gleich bleibt
-% 2. Setzen, sodass nur noch Listings des eigentlichen Dokuments im VZ
-%	WICHTIG: PDF jetzt wegspeichern!
-% 3. Änderungen von 1. rückgängig machen, alles setzen, sodass Anhang wieder passt
-% Das eigentliche, resultieren Dokument setzt sich jetzt aus dem PDF von 2.
-% (inkl. Listingsverzeichnis) + Anhang von 3. zusammen
-% Besserer Weg?!?!?
-
-\newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-
-\section{Anhang: der zweite Anhang}
-\begin{figure}[h]					
-\centering
-Einkommentieren!
-%\includegraphics[scale=0.75]{pics/7_jmx_console.png}		% Grafikeinbindung mit Dateiname und Groessenangabe			% ([width=], [height=], [scale=1.00]...)
-\caption{Screenshot der JMX-Weboberfläche}		% Bildbeschriftung
-\label{fig:Fabrikmethode}							% Sprungmarke fuer Verweise
-\end{figure} 	\vspace{-12pt}
-
-\newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-
-
-\newpage
-\section{Anhang: der dritte Anhang}
-%Fussnoten-Tests:
-%\footnote{\citep[vgl. ][S. 1]{Schmeh2009}}
-%\footnote{\citep[vgl. ][S. 23]{Schmeh2009}}
-%\footnote{\citep[vgl. ][S. 1-100]{Schneier1996}}
-%\footnote{\citep[vgl. ][S. 1]{Monson-Haefel2009}}
-%\citep[vgl. ][S. 1]{Langner2006}
-%\citep[vgl. ][S. 1]{Lipp2000}
-%\citep[vgl. ][S. 1]{Backschat2007}
-%\footnote{\citep[vgl. ][]{Schneier1996}}
-
-%nocite bewirkt,d ass das ganze bib geschrieben wird, auch wenn noch keine cites (referenz) im text auf jedes element existieren
-\nocite{*}
-
-\newpage
-Folgendes Bild ist im Abbildungsverzeichnis:
-\begin{figure}[h]							
-\centering 
-Einkommentieren!
-%\includegraphics[scale=1.0]{pics/giesecke_devrient_ger.png}		% Grafikeinbindung mit Dateiname und Groessenangabe												% ([width=], [height=], [scale=1.00]...)
-\caption{Logo von Giesecke \& Devrient}									% Bildbeschriftung
-\label{fig:LogoGD}												% Sprungmarke fuer Verweise
-\end{figure}
-
-Folgendes Bild ist NICHT im Abbildungsverzeichnis: \\ %einfach  den figure-mantel weglassen
-\begin{center}
-Einkommentieren!
-%\includegraphics*[scale=1.0]{pics/giesecke_devrient_ger.png}	
-\end{center}
-
-Tabellenobjekt: hier ist ein Bild in einer Tabelle mit einer Spalte und einer Zelle:
-So können z.B. Tabellen, die als Bilddatei vorliegen als Tabelle betitelt und auch ins Tabellen-VZ aufgenommen werden.
-%\begin{table}[h]							
-%\centering 
-%Einkommentieren!
-%\includegraphics[scale=1.0]{pics/giesecke_devrient_ger.png}		% Grafikeinbindung mit Dateiname und Groessenangabe													% ([width=], [height=], [scale=1.00]...)
-%
-%\caption{Logo von Giesecke \& Devrient als Tabelle deklariert}									% Bildbeschriftung
-%\label{fig:LogoGD}												% Sprungmarke fuer Verweise
-%\end{table}
-
-
-
-
-\end{appendix}
-%\end{anhang}
-
-%\newpage
-%\thispagestyle{empty}
-%\mbox{}
 
 \end{document}
