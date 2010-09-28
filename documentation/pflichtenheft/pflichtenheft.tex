@@ -248,7 +248,7 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
 \end{center}
 \vspace*{180pt}
 
-\textsf{\large{Stand: 09.06.2010}}\\
+\textsf{\large{Stand: 23.07.2010}}\\
 \vspace*{20pt}
 \\ 
 
@@ -302,24 +302,23 @@ Dieses Pflichtenheft ist nach dem Gliederungsvorschlag von Prof. Dr. Helmut Balz
 %\newpage
 
 \section{Zielbestimmung}
-Synchrony ist eine Software zum Synchronsieren von Verzeichnissen und Dateien.
+\textit{Synchrony}  ist eine Software, die es ermöglicht, Verzeichnisse und Dateien zu synchronisieren.
 Die Anwendung ermöglicht Datenbestände zwischen verschiedenen Geräten synchron zu halten.
-Synchrony stellt eine benutzerfreundliche Benutzeroberfläche zur Verfügung. Diese dient dazu
+\textit{Synchrony} stellt eine benutzerfreundliche Benutzeroberfläche zur Verfügung. Diese dient dazu
 zu synchronsierende Ordner anzugeben und den Synchronisationsdienst zu aktivieren. Ist der Dienst auf
-den jeweiligen Geräten aktiv, so läuft der Abgleich der Daten im Hintergrund ab. Die Verzeichnisse 
+den jeweiligen Endgeräten aktiv, so läuft der Abgleich der Daten im Hintergrund ab. Die Verzeichnisse 
 werden dabei in beiden Richtungen abgeglichen.
 \subsection{Muss-Kriterien}
 Die im Folgenden genannten Punkte stellen unabdingbare Produktleistungen dar:
 \begin{itemize}
-\item Der Benutzer kann Dateien zwischen zwei Rechnern synchronisieren. (kein Mount!)
+\item Der Benutzer kann Dateien zwischen zwei oder mehreren Rechnern synchronisieren. Die Daten werden hierbei repliziert.
 \item Der Benutzer kann den Synchronisationsdienst konfigurieren.
-\item Bei der Installation wird ein Account vergeben, der zur Identifikation im Netzwerk dient.
+\item Bei der Installation wird ein Account vergeben, der zur Identifikation eines Nutzers im Netzwerk dient.
 \item Der Benutzer kann den Synchronisationsdienst aktiveren bzw. deaktivieren.
 \item Der Benutzer kann zu die Verzeichnisse, welche er synchronsieren will selbst bestimmen und verändern.
 \item Der Benutzer kann den Status der Synchronisation verfolgen.
 \item Der Benutzer kann wählen, ob die Oberfläche deutsch oder englischsprachig angezeigt wird.
-\item Nach einmaliger Konfiguration wird die Verbindung automatisch hergestellt und die  
-  nötigen Updates, nach Dateiänderungen, durchgeführt.
+\item Nach einmaliger Konfiguration ist der Dienst funktions- und synchronisationsbereit.
 \item Die Dateisynchronisation erfolgt auf Odnerebene, d.h. Dateien der Subordner werden ebenfalls
   synchronsiert
 \end{itemize}
@@ -327,8 +326,7 @@ Die im Folgenden genannten Punkte stellen unabdingbare Produktleistungen dar:
 \begin{itemize}
 \item Der Synchronsiationsdienst ist automatisch beim Start des Gerätes aktiv.
 \item Über einen Webserver wird ein ’Social Sharing’ - Mechanismus realisiert.
-\item Eine Anbindung mobiler Clients soll evaluiert werden. (z.B. Android, IPhone)
-\item Eine Anbindung an etablierte Protokolle soll evaluiert werden.
+\item Eine Anbindung mobiler Clients soll evaluiert werden. (z.B. Android, iPhone)
 \end{itemize}
 \subsection{Zielabgrenzung}
 Der Anwendungszweck ist nicht identisch mit P2P (Torrent), d.h. kein Filesharing-Protokoll, das sich besonders für die schnelle Verteilung großer Datenmengen eignet.
@@ -338,27 +336,27 @@ Der Anwendungszweck ist nicht identisch mit P2P (Torrent), d.h. kein Filesharing
 Die Softwarekomponente soll Daten jeglicher Art synchron halten und replizieren können, d.h. sie ist auf keinen konkreten Anwendungsbereich limitiert oder auf einen solchen speziell zugeschnitten.\par
 Der Dienst ist jedoch, wie in Abschnitt 2.3 beschrieben wird, als Hintergrunddienst gedacht, um Dateien und Informationen zwischen verschiedenen Speicherlokationen zeitnah synchron zu halten und wird daher nicht als Vertriebskanal von großen Dateien (Stichwort Peer-to-Peer-Filesharing) entworfen.
 \subsection{Zielgruppe}
-Prinzipiell ist die für jeden Benutzertyp geeignet, die Dateien zwischen mehreren System synchron halten bzw. den Dienst zur Datensicherung verwenden wollen.\par
+Prinzipiell ist die Software für jeden Benutzertyp geeignet, der Dateien zwischen mehreren System synchron halten bzw. den Dienst zur Datensicherung verwenden will.\par
 Nachfolgend eine beispielhafte und nicht abgeschlossene Liste möglicher Anwender und Anwendungsszenarien der Softwarekomponente:
 \begin{itemize}
 	\item Software-Entwickler: Dateien wie z.B. zur Entwicklung von Software aus einem Projekt-Workspace werden zeitnah abgeglichen, sodass an einem anderen Arbeitsplatz weiterentwickelt werden kann.
 	\item Photographen: Beispielsweise können an einem Standort A geschossene Photos über eine mobile Internetverbindung mit einer Workstation am Standort B sofort betrachtet und bearbeitet werden. 
 	\item Lehrer/Professoren: Dokumente wie Übungsaufgaben o. Ä. können zwischen Systemen des Büros und des Heimarbeitsplatzes synchron gehalten werden.
-	\item Buchauthoren: Skripte, Notizen usw. können zwischen verschiedenen Geräten an verschiedenen Standorten synchronisiert und repliziert werden. 
+	\item Buchautoren: Skripte, Notizen usw. können zwischen verschiedenen Geräten an verschiedenen Standorten synchronisiert und repliziert werden. 
 \end{itemize}
 \subsection{Betriebsbedingungen}
-Der Dateisynchronisationsdienst soll i.d.R. im Hintergrund als Benutzerdienst laufen und im Hintergrund aktiv sein. Der Dienst wird daher i.d.R. beim Einloggen des Anwenders gestartet.\par
+Der Dateisynchronisationsdienst soll i.d.R. im Hintergrund als Benutzerdienst laufen und im selbsstständig aktiv sein. Der Dienst wird daher i.d.R. beim Einloggen des Anwenders automatisch gestartet.\par
 Der Benutzer hat aber auch Möglichkeiten der Steuerung des Dienstes über eine graphische Schnittstelle (GUI), die später im Dokument genauer spezifiziert wird.\par
 Das Ausführen der eigentlichen Funktion des Dienstes bedarf aber keiner Aktion des Benutzers.
 
 \newpage
 \section{Produktumgebung}
 \subsection{Software}
-Synchrony stellt folgende Anforderungen an das System hinsichtlich softwareseitiger Unterstützung:
+\textit{Synchrony}  stellt folgende Anforderungen an das System hinsichtlich softwareseitiger Unterstützung:
 \begin{itemize}
-	\item Java Runtime Environment 7 oder höher
+	\item Java Runtime Environment 7 oder höher\footnote{neue Möglichkeiten der Dateisystem-Programmierschnittstellen sollen genutzt werden.\newline Siehe hierzu die offiziellen Sun-Webnotes: \url{http://java.sun.com/javase/7/webnotes/index.html}}
 	\item ein mit der Dateisystem-API von Java 7 kompatibles Dateisystem
-	\item für die Verwendung der graphischen Schnittstelle (GUI) muss ein kompatibles Betriebssystem/Windows-Manager vorhanden sein
+	\item für die Verwendung der graphischen Schnittstelle (GUI) muss ein kompatibles Betriebssystem bzw. ein kompatibler Window-Manager vorhanden sein
 \end{itemize}
 \subsection{Hardware}
 Die Voraussetzungen hinsichtlich der Hardware sind folgendermaßen:
@@ -375,8 +373,7 @@ gespeicherte, Sammlung von lesbaren Informationen zu verstehen. Im Normallfall s
 dies Dateien, Verzeichnisse oder ganze Partitionen. Diese k\"{o}nnen auf r\"{a}umlich
 voneinander getrennten Speichermedien abgelegt sein, und m\"{u}ssen auch nicht
 dasselbe Betriebssystem als Grundlage aufweisen.\par
-\emph{Synchrony} gleicht diese Daten miteinander ab, und bringt, entsprechend den
-eingestellten Vorgaben, diese auf einen einheitlichen Stand. Bei einem nicht
+\textit{Synchrony}  gleicht diese Daten miteinander ab, und bringt diese auf einen einheitlichen Stand. Bei einem nicht
 klar definierten Zustand zweier Datenmengen kann der User manuell eingreifen.\par
 Es besteht die M\"{o}glichkeit sich das laufende Programm als System-Icon in die
 Kontrollleiste des Systems einbetten zu lassen. Das (mit der rechten Maustaste
@@ -385,7 +382,7 @@ aufklappbare) Menue soll unter anderem folgende Eintr\"{a}ge enthalten:
 \item Beenden der Anwendung
 \item Starten des Dienstes
 \item Stoppen des Dienstes
-\item Einstellungen
+\item Einstellungen\footnote{Beispiele: Maximale zu verwendende Bandbreite, Auswahl der zu synchronisierenden Ordner ...}
 \item Statusinfo
 \end{itemize}
 
@@ -397,7 +394,7 @@ Bedarf von der lokalen Konfiguration \emph{(z.B. ~./.synchrony/syn\_local.config
 Um die Konfigurationsdateien anzupassen wird ein grafisches Frontend zur Verf\"{u}gung
 gestellt, in dem die Einstellungen abgerufen und modifiziert werden k\"{o}nnen. Dieses
 soll m\"{o}glichst einfach und \"{u}bersichtlich aufgebaut sein, um auch dem
-\glqq Normaluser\grqq\ eine, ohne lange Einarbeitungszeit, bedienbare Schnittstelle anzubieten.
+\glqq Normaluser\grqq\ eine mit möglichst kurzer Einarbeitungszeit bedienbare Schnittstelle anzubieten.
 \newpage
 \section{Produktdaten}
 Der Dienst benötigt bzw. erzeugt folgende, lokal gespeicherten Daten:
@@ -417,13 +414,13 @@ primär zur Protokollierung evtl. auftretener Fehler.
 Die Software verspricht
 \begin{itemize}
     \item verlustfreie Dateisynchronisation,
-    \item minimale Festplattenzugriffe,
+    \item ökonomischen Festplattenzugriff (um Systemgesamtleistung nicht zu beinflussen),
     \item und das Erkennen und Auflösen von Versionskonflikten.
 \end{itemize}
 \newpage
 \section{Benutzeroberfläche}
 Das System benötigt im Regelfall keinerlei Benutzerinteraktion. Zur Konfiguration
-wird ein ausblendbares Tray-Icon angeboten, über dieses der Benutzer auch den Dienst
+wird ein ausblendbares Tray-Icon angeboten, über das der Benutzer auch den Dienst
 temporär pausieren oder beenden kann.
 \begin{figure}[h]
     \centering
@@ -475,7 +472,7 @@ oder erkannte Versionskonflikte. Die Häufigkeit der Benachrichtigungen kann ang
 
 \newpage
 \section{Testfälle}
-Die Testfälle werden jeweils vor der Programmierung einer Funktion überlegt und implementiert. Das Prinzip dahinter ist das sogenannte
+Die Testfälle werden jeweils vor der Programmierung einer Funktion entworfen und implementiert. Das Prinzip dahinter ist das sogenannte
 Test Driven Development, welches die Tests als Basis der Programmierung festlegt. Diese Vorgehensweise setzt von Anfang an die Qualität
 der Software in den Mittelpunkt und gewährleistet somit einen hohen Qualitätsstandard. Dadurch sind die Tests automatisch in den 
 Entwicklungsprozess mit einbezogen und einzelne Testfälle werden nicht vergessen. Die Tests werden mit sogenannten JUnit-Tests realisiert.
@@ -483,8 +480,8 @@ Entwicklungsprozess mit einbezogen und einzelne Testfälle werden nicht vergesse
 \newpage
 \section{Entwicklungsumgebung}
 \subsection{Software}
-Für die Entwicklung des Synchronisations-Tools synchrony wird die Entwicklungsumgebung NetBeans (Version 6.8) verwendet.
-synchrony wird in der Programmiersprache Java entwickelt - dazu wird auf den Entwicklungsrechnern JDK 7 installiert.
+Für die Entwicklung des Synchronisations-Tools \textit{Synchrony} wird die Entwicklungsumgebung NetBeans (Version 6.8) verwendet.
+\textit{Synchrony} wird in der Programmiersprache Java entwickelt - dazu wird auf den Entwicklungsrechnern JDK 7 installiert.
 Das Release von JDK 7 ist voraussichtlich im dritten Quartal 2010, wird aber aufgrund der neu hinzugekommenen File-API bereits für
 dieses Projekt verwendet. Datei-Operationen sind ein wesentlicher Bestandteil für synchrony und diese sind in Java 7 sehr effizient
 implementiert.
@@ -498,13 +495,12 @@ GitHub (Version 1.6.3.3) wird als Online-Versionskontrollsystem für die Verwalt
 Team besser organisieren. GitHub ist eine OpenSource-Software, welche der GNU General Public License unterliegt.
 
 \subsection{Hardware}
-Die Entwicklung erfolgt auf unterschiedlichen Rechnern, allerdings mit dem gleichen Betriebssystem Ubuntu 9.04 - 10.04.
+Die Entwicklung erfolgt auf unterschiedlichen Rechnern. Als Entwickler-Betriebssystem werden verschiedene Linuxdistributionen verwendet. Vorrangig wird die Distribution Ubuntu in ihren Releases 9.04, 9.10 und 10.04 eingesetzt..
 Die Rechner-Hardware spielt keine entscheidende Rolle, es muss lediglich die Java Virtual Machine darauf laufen können. 
 
 \newpage
 \listoffigures
 
-\newpage
 \listoftables
 
 \end{document}
