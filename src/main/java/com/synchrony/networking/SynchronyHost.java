@@ -29,7 +29,7 @@ public class SynchronyHost extends Thread {
     private String multicastAddress;
     private int multicastPort;
     private int unicastPort;
-    private List<String> knownHosts = new ArrayList<String>();
+    private ArrayList<String> knownHosts;
 
     public void startHost() throws IOException, InterruptedException {
 
@@ -37,19 +37,21 @@ public class SynchronyHost extends Thread {
         if (hostType == 0) {
             DatagramSocket socket = new DatagramSocket();
 
-            byte[] b = new byte[bufferLength];
+            //byte[] b = new byte[bufferLength];
+            byte[] b = "Hello! I'm a Synchrony Host".getBytes();
+
+
             DatagramPacket dgram;
 
             dgram = new DatagramPacket(b, b.length, InetAddress.getByName(multicastAddress), multicastPort);
 
             while (true) {
-                resetKnownHosts();
+                knownHosts.clear();
                 //  System.err.print(".");
-//                System.err.println(hostID + "(MulticastSender): Sending " + b.length + " bytes to "
-//                        + dgram.getAddress() + ':' + dgram.getPort());
+                System.out.println("[Host " + hostID + "] MCS sent " + b.length + " bytes (\"" + new String(b) + "\") to "
+                        + dgram.getAddress() + ':' + dgram.getPort());
                 socket.send(dgram);
-                Thread.sleep(5000);
-
+                Thread.sleep(10000);
             }
 
         } else if (hostType == 1) {//hostType = 1 means a multicast receiver @ port 4711
@@ -66,19 +68,18 @@ public class SynchronyHost extends Thread {
             recvSocket.joinGroup(InetAddress.getByName(multicastAddress));
 
             while (true) {
-
                 recvSocket.receive(dgram); // blocks until a datagram is received
                 // get a list of the localhosts IP addresses for filtering
                 myIPs = getOwnIPs();
                 //drop own packages
-                if (!myIPs.contains(dgram.getAddress().getHostAddress())) {
-//                System.err.println(hostID + "(MulticastReceiver): Received " + dgram.getLength()
-//                        + " bytes from " + dgram.getAddress() + ':' + dgram.getPort());
-                    // now we know the ip of the other host: let's answer him via an unicast packet
+                if (myIPs.contains(dgram.getAddress().getHostAddress())) {
+                    System.out.println("[Host " + hostID + "] MCR received " + dgram.getLength()
+                            + " bytes (\"" + new String(dgram.getData()) + "\") from " + dgram.getAddress() + ':' + dgram.getPort());
+                    b = "Hello! I'm a Synchrony Host".getBytes();
                     dgram = new DatagramPacket(b, b.length, dgram.getAddress(), unicastPort);
                     sendSocket.send(dgram);
                 } else {
-//                    System.out.println(hostID + ": Received a package from myself, boring!");
+                    //   System.out.println(hostID + ": Received a package from myself, boring!");
                 }
             }
 
@@ -88,24 +89,27 @@ public class SynchronyHost extends Thread {
             DatagramSocket recvSocket = new DatagramSocket(unicastPort);
             while (true) {
                 recvSocket.receive(dgram); // blocks until a datagram is received
-//                System.err.println(hostID + "(UnicastReceiver): "
-//                         + dgram.getAddress() + ':' + dgram.getPort() + " is a valid remote host");
-                String host = dgram.getAddress().getHostAddress() + ":" + dgram.getPort();
-                knownHosts.remove(host);
-                knownHosts.add(host);
-                System.out.println("[Host " + hostID +"] Currently known synchrony hosts: " + knownHosts);
+                if ((new String(dgram.getData()).equals("Hello! I'm a Synchrony Host"))) {
+                    System.out.println("[Host " + hostID + "] UCR got a correct answer: "
+                            + dgram.getAddress() + ':' + dgram.getPort() + " is a valid remote host");
+                    String host = dgram.getAddress().getHostAddress() + ":" + dgram.getPort();
+
+                    if (!knownHosts.contains((String)host)) {
+                        knownHosts.add(host);
+                    }
+
+                }
+                System.err.println("[Host " + hostID + "] Currently known synchrony hosts: " + knownHosts);
             }
         } else {
             throw new RuntimeException("Invalid hostType given: " + hostType);
         }
     }
 
-    private synchronized void resetKnownHosts() {
-        knownHosts.clear();
-    }
-
     public SynchronyHost(
-            int hostType, String hostID, int bufferLength, String multicastAddress, int multicastPort, int unicastPort) {
+            int hostType, String hostID, int bufferLength,
+            String multicastAddress, int multicastPort,
+            int unicastPort, ArrayList<String> knownHosts) {
 
         this.hostType = hostType;
         this.hostID = hostID;
@@ -113,24 +117,24 @@ public class SynchronyHost extends Thread {
         this.multicastAddress = multicastAddress;
         this.multicastPort = multicastPort;
         this.unicastPort = unicastPort;
+        this.knownHosts = knownHosts;
 
     }
 
     public static void main(String[] args) {
-
-        int bufferLength = 32;
-        String mcastAddr = "224.0.0.1";
-
-
-        int destPort = 4711;
-
-        SynchronyHost sender = new SynchronyHost(0, "A", bufferLength, mcastAddr, destPort, 5000);
-        SynchronyHost receiver = new SynchronyHost(1, "A", bufferLength, mcastAddr, destPort, 5000);
-
-        receiver.start();
-        sender.start();
-
-
+//
+//        int bufferLength = 32;
+//        String mcastAddr = "224.0.0.1";
+//
+//
+//        int destPort = 4711;
+//
+//        SynchronyHost sender = new SynchronyHost(0, "A", bufferLength, mcastAddr, destPort, 5000);
+//        SynchronyHost receiver = new SynchronyHost(1, "A", bufferLength, mcastAddr, destPort, 5000);
+//
+//        receiver.start();
+//        sender.start();
+//
     }
 
     @Override

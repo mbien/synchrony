@@ -45,7 +45,7 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
 public class Client {
     private static final String HOSTNAME = "localhost";
 
-    private static final int PORT = 8083;
+    private static final int PORT = 5000;
 
     private static final long CONNECT_TIMEOUT = 30*1000L; // 30 seconds
 
@@ -101,6 +101,7 @@ public class Client {
 
         // wait until the summation is done
         session.getCloseFuture().awaitUninterruptibly();
+
 
         connector.dispose();
     }

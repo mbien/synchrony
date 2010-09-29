@@ -19,7 +19,7 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
  * @author <a href="http://mina.apache.org">Apache MINA Project</a>
  */
 public class Server {
-    private static final int SERVER_PORT = 8083;
+    private static final int SERVER_PORT = 5000;
 
     // Set this to false to use object serialization instead of custom codec.
     private static final boolean USE_CUSTOM_CODEC = true;
