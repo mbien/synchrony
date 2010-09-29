@@ -1,10 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.synchrony.networking;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static com.synchrony.networking.SynchronyHost.HostType.*;
@@ -22,8 +20,7 @@ public class SynchronyHostStarter {
         int multicastPort = Integer.parseInt(args[2]);
         int unicastPort = Integer.parseInt(args[3]);
 
-        ArrayList<String> knownHosts = new ArrayList<String>(10);
-        ArrayList<String> hosts = new ArrayList<String>(101);
+        Map<String, Long> knownHosts = new HashMap<String, Long>();
 
         // multicast sender to distribute lookups for possible synchrony hosts
         SynchronyHost multicastSender = new SynchronyHost(MulticastReceiver, hostID, 27, mcAdress, multicastPort, unicastPort, knownHosts);
@@ -36,6 +33,7 @@ public class SynchronyHostStarter {
         multicastReceiver.start();
         multicastSender.start();
 
+        Map<String, Long> hostSnapshot = new HashMap<String, Long>();
         while (true) {
 
             try {
@@ -45,16 +43,16 @@ public class SynchronyHostStarter {
             }
 
             //get a snapshot of all known hosts at this time
-            hosts.addAll(knownHosts);
+
+            synchronized(knownHosts) {
+                hostSnapshot = new HashMap<String, Long>(knownHosts);
+            }
 
 //            System.out.println(hosts.size());
 
-            for (String host : hosts) {
-                // now we can inform all peers about changes (create, modify, delete, move)
-                System.out.println("\t SynchronyHostStarter knows this hosts: " + hosts);
-            }
+            System.out.println("\t SynchronyHostStarter knows this hosts: " + hostSnapshot);
 
-            hosts.clear();
+            hostSnapshot.clear();
         }
 
 
