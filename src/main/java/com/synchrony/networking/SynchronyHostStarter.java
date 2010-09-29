@@ -7,6 +7,7 @@ package com.synchrony.networking;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static com.synchrony.networking.SynchronyHost.HostType.*;
 
 /**
  *
@@ -25,13 +26,13 @@ public class SynchronyHostStarter {
         ArrayList<String> hosts = new ArrayList<String>(101);
 
         // multicast sender to distribute lookups for possible synchrony hosts
-        SynchronyHost multicastSender = new SynchronyHost(0, hostID, 27, mcAdress, multicastPort, unicastPort, knownHosts);
+        SynchronyHost multicastSender = new SynchronyHost(MulticastReceiver, hostID, 27, mcAdress, multicastPort, unicastPort, knownHosts);
         // multicast receiver to receive and answer lookups from other hosts
-        SynchronyHost multicastReceiver = new SynchronyHost(1, hostID, 27, mcAdress, multicastPort, unicastPort, knownHosts);
+        SynchronyHost multicastReceiver = new SynchronyHost(MulticastSender, hostID, 27, mcAdress, multicastPort, unicastPort, knownHosts);
         // unicast receiver to receive unicast packages on a special port to determine a host to be a synchrony host
-        SynchronyHost unicastReceiver = new SynchronyHost(2, hostID, 27, mcAdress, multicastPort, unicastPort, knownHosts);
+        SynchronyHost unicastReceiver = new SynchronyHost(UnicastReceiver, hostID, 27, mcAdress, multicastPort, unicastPort, knownHosts);
 
-//        unicastReceiver.start();
+        unicastReceiver.start();
         multicastReceiver.start();
         multicastSender.start();
 
@@ -44,12 +45,7 @@ public class SynchronyHostStarter {
             }
 
             //get a snapshot of all known hosts at this time
-            if (!knownHosts.isEmpty()) {
-                for(int i = 0; i<knownHosts.size(); i++) {
-                    hosts.add("");
-                }
-                java.util.Collections.copy(hosts, knownHosts);
-            }
+            hosts.addAll(knownHosts);
 
 //            System.out.println(hosts.size());
 
