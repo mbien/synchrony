@@ -18,22 +18,19 @@ public class SynchronyHostStarter {
         String hostID = args[0];
         String mcAdress = args[1];
         int multicastPort = Integer.parseInt(args[2]);
-        int unicastPort = Integer.parseInt(args[3]);
 
         Map<String, Long> knownHosts = new HashMap<String, Long>();
 
         // multicast sender to distribute lookups for possible synchrony hosts
-        SynchronyHost multicastSender = new SynchronyHost(MulticastReceiver, hostID, 27, mcAdress, multicastPort, unicastPort, knownHosts);
+        SynchronyHost multicastSender = new SynchronyHost(MulticastReceiver, hostID, 27, mcAdress, multicastPort, knownHosts);
         // multicast receiver to receive and answer lookups from other hosts
-        SynchronyHost multicastReceiver = new SynchronyHost(MulticastSender, hostID, 27, mcAdress, multicastPort, unicastPort, knownHosts);
-        // unicast receiver to receive unicast packages on a special port to determine a host to be a synchrony host
-        SynchronyHost unicastReceiver = new SynchronyHost(UnicastReceiver, hostID, 27, mcAdress, multicastPort, unicastPort, knownHosts);
+        SynchronyHost multicastReceiver = new SynchronyHost(MulticastSender, hostID, 27, mcAdress, multicastPort, knownHosts);
 
-        unicastReceiver.start();
         multicastReceiver.start();
         multicastSender.start();
 
         Map<String, Long> hostSnapshot = new HashMap<String, Long>();
+
         while (true) {
 
             try {
@@ -43,12 +40,9 @@ public class SynchronyHostStarter {
             }
 
             //get a snapshot of all known hosts at this time
-
             synchronized(knownHosts) {
                 hostSnapshot = new HashMap<String, Long>(knownHosts);
             }
-
-//            System.out.println(hosts.size());
 
             System.out.println("\t SynchronyHostStarter knows this hosts: " + hostSnapshot);
 
