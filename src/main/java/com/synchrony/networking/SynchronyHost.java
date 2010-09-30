@@ -8,14 +8,22 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
+import java.net.SocketAddress;
 import java.net.SocketException;
+import java.net.StandardProtocolFamily;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousDatagramChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,8 +35,8 @@ public class SynchronyHost extends Thread {
 
     public static final String MAGIC_STRING = "Hello! I'm a Synchrony Host";
 
-    public static final long DISCOVERY_INTERVAL = 10000;
-    public static final long TIME_TILL_DEAD = 3 * DISCOVERY_INTERVAL;
+    public static final long DISCOVERY_INTERVAL = 5000;
+    public static final long TIME_TILL_DEAD = 2 * DISCOVERY_INTERVAL;
 
     enum HostType {MulticastSender, MulticastReceiver, UnicastReceiver}
 
@@ -59,60 +67,84 @@ public class SynchronyHost extends Thread {
 
     public void startHost() throws IOException, InterruptedException {
 
-        //hostType = 0 means a multicast sender
         if (hostType == HostType.MulticastSender) {
             startMulticastSender();
         } else if (hostType == HostType.MulticastReceiver) {//hostType = 1 means a multicast receiver @ port 4711
-            startMulticastReceiver();
-        } else if (hostType == HostType.UnicastReceiver) {//hostType = 2 means a unicast receiver @ port 5000
+            try {
+                startMulticastReceiver();
+            } catch (SocketException ex) {
+                Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExecutionException ex) {
+                Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (TimeoutException ex) {
+                Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (hostType == HostType.UnicastReceiver) {
             startUnicastReceiver();
         }
 
     }
 
     private void startUnicastReceiver() throws IOException, SocketException {
-        //hostType = 2 means a unicast receiver @ port 5000
         byte[] b = new byte[bufferLength];
         DatagramPacket dgram = new DatagramPacket(b, b.length);
-        DatagramSocket recvSocket = new DatagramSocket(unicastPort);
         while (true) {
+            DatagramSocket recvSocket = new DatagramSocket(unicastPort);
             recvSocket.receive(dgram); // blocks until a datagram is received
             if (new String(dgram.getData()).equals(MAGIC_STRING)) {
                 System.out.println("[Host " + hostID + "] UCR got a correct answer: " + dgram.getAddress() + ':' + dgram.getPort() + " is a valid remote host");
-                String host = dgram.getAddress().getHostAddress() + ":" + dgram.getPort();
+                String host = dgram.getAddress().getHostAddress();
                 synchronized(knownHosts) {
                     knownHosts.put(host, System.currentTimeMillis());
                 }
             }
+            recvSocket.close();
             System.err.println("[Host " + hostID + "] Currently known synchrony hosts: " + knownHosts);
         }
     }
 
-    private void startMulticastReceiver() throws IOException, SocketException {
-        //hostType = 1 means a multicast receiver @ port 4711
-        //System.out.println(hostID + ": my IP is " + InetAddress.getLocalHost().getHostAddress().toString());
+    private void startMulticastReceiver() throws IOException, SocketException, InterruptedException, ExecutionException, TimeoutException {
+
         ArrayList<String> myIPs = null;
-        byte[] b = new byte[bufferLength];
-        DatagramPacket dgram = new DatagramPacket(b, b.length);
-        InetAddress address = InetAddress.getByName(multicastAddress);
+        byte[] bytes = new byte[bufferLength];
+        ByteBuffer buffer = ByteBuffer.allocateDirect(bufferLength);
 
         while (true) {
-            DatagramSocket sendSocket = new DatagramSocket();
-            MulticastSocket recvSocket = new MulticastSocket(multicastPort); // must bind receive side
-            recvSocket.joinGroup(address);
             
             // get a list of the localhosts IP addresses for filtering
             myIPs = getOwnIPs();
-            recvSocket.receive(dgram); // blocks until a datagram is received
-            //drop own packages
-            if (!myIPs.contains(dgram.getAddress().getHostAddress())) {
-                System.out.println("[Host " + hostID + "] MCR received " + dgram.getLength() + " bytes (\"" + new String(dgram.getData()) + "\") from " + dgram.getAddress() + ':' + dgram.getPort());
-                b = MAGIC_STRING.getBytes();
-                dgram = new DatagramPacket(b, b.length, dgram.getAddress(), unicastPort);
-                sendSocket.send(dgram);
-            } else {
-                //   System.out.println(hostID + ": Received a package from myself, boring!");
+
+            AsynchronousDatagramChannel channel = AsynchronousDatagramChannel.open(StandardProtocolFamily.INET, null);
+            channel.bind(new InetSocketAddress(multicastPort));
+
+            Future<SocketAddress> future = channel.receive(buffer); // non blocking
+
+            try{
+                SocketAddress addr = future.get(DISCOVERY_INTERVAL*2, TimeUnit.SECONDS); // blocking
+                InetAddress senderAddress = ((InetSocketAddress) addr).getAddress();
+
+                //drop own packages
+                if (!myIPs.contains(senderAddress.getHostAddress())) {
+
+                    buffer.rewind();
+                    buffer.get(bytes);
+                    System.out.println("[Host " + hostID + "] MCR received " + bytes.length + " bytes (\"" + new String(bytes) + "\") from " + senderAddress.getHostAddress());
+
+                    // send
+                    bytes = MAGIC_STRING.getBytes();
+                    DatagramPacket dgram = new DatagramPacket(bytes, bytes.length, senderAddress, unicastPort);
+                    DatagramSocket sendSocket = new DatagramSocket();
+                    sendSocket.send(dgram);
+                    sendSocket.close();
+                } else {
+                    //   System.out.println(hostID + ": Received a package from myself, boring!");
+                }
+            }catch(TimeoutException ex) {
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "timeout", ex);
+            }finally{
+                channel.close();
             }
+
         }
     }
 
