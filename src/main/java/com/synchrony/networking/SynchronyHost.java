@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  *
  * @author blip
  */
-public class SynchronyHost extends Thread {
+public class SynchronyHost {
     
     private static final Logger LOG = Logger.getLogger(SynchronyHost.class.getName());
 
@@ -42,10 +42,7 @@ public class SynchronyHost extends Thread {
 
     public static final long DISCOVERY_INTERVAL = 5000;
     public static final long TIME_TILL_DEAD = 2 * DISCOVERY_INTERVAL;
-
-    enum HostType {MulticastSender, MulticastReceiver}
-
-    private HostType hostType;
+    private final NodeListener listener;
 
     private String hostID;
     private int bufferLength;
@@ -54,31 +51,46 @@ public class SynchronyHost extends Thread {
     private int multicastPort;
 
     // <ID, timestamp>
-    private final Map<String, Long> knownHosts;
+    private final Map<Node, Long> knownHosts;
 
-    SynchronyHost(HostType hostType, String hostID, int bufferLength,
-            String multicastAddress, int multicastPort, Map<String, Long> knownHosts) {
+    SynchronyHost(String hostID, int bufferLength, String multicastAddress, int multicastPort, Map<Node, Long> knownHosts, NodeListener listener) {
 
-        this.hostType = hostType;
         this.hostID = hostID;
         this.bufferLength = bufferLength;
         this.multicastAddress = multicastAddress;
         this.multicastPort = multicastPort;
         this.knownHosts = knownHosts;
-
+        this.listener = listener;
     }
 
-    public void startHost() throws InterruptedException {
+    public void startHost() {
 
-        if (hostType == HostType.MulticastSender) {
-            try {
-                startMulticastSender();
-            } catch (UnknownHostException ex) {
-                throw new RuntimeException("something is seriously wrong", ex);
+        Runnable sender = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    startMulticastSender();
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                } catch (UnknownHostException ex) {
+                    throw new RuntimeException("something is seriously wrong", ex);
+                }
             }
-        } else if (hostType == HostType.MulticastReceiver) {
-            startMulticastReceiver();
-        }
+        };
+        
+        Runnable receiver = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    startMulticastReceiver();
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        };
+
+        new Thread(receiver, "receiver").start();
+        new Thread(sender, "sender").start();
 
     }
 
@@ -112,7 +124,12 @@ public class SynchronyHost extends Thread {
                     System.out.println("[Host " + hostID + "] MCR received " + bytes.length + " bytes (\"" + new String(bytes) + "\") from " + senderAddress.getHostAddress());
 
                     synchronized(knownHosts) {
-                        knownHosts.put(senderAddress.getHostAddress(), System.currentTimeMillis());
+                        Node node = new Node(senderAddress.getHostAddress()+" - "+hashCode());
+                        Long old = knownHosts.put(node, System.currentTimeMillis());
+                        if(old != null) {
+                            // new host discovered
+                            listener.nodeDiscovered(node, new ArrayList<Node>(knownHosts.keySet()));
+                        }
                     }
 
                 }
@@ -143,41 +160,37 @@ public class SynchronyHost extends Thread {
         DatagramPacket dgram = new DatagramPacket(bytes, bytes.length, address, multicastPort);
 
         while (true) {
+            DatagramSocket socket = null;
             try{
-                DatagramSocket socket = new DatagramSocket();
+                socket = new DatagramSocket();
 
                 synchronized(knownHosts) {
                     long time = System.currentTimeMillis();
-                    List<String> keysToRemove = new ArrayList<>();
-                    for (Map.Entry<String, Long> entry : knownHosts.entrySet()) {
+                    List<Node> keysToRemove = new ArrayList<>();
+                    for (Map.Entry<Node, Long> entry : knownHosts.entrySet()) {
                         if(time-entry.getValue() > TIME_TILL_DEAD) {
                             keysToRemove.add(entry.getKey());
                         }
                     }
-                    for (String key : keysToRemove) {
-                        knownHosts.remove(key);
+                    for (Node node : keysToRemove) {
+                        knownHosts.remove(node);
+                        listener.nodeLost(node, new ArrayList<Node>(knownHosts.keySet()));
                     }
+                    
                 }
 
                 //  System.err.print(".");
                 System.out.println("[Host " + hostID + "] MCS sent " + bytes.length + " bytes (\"" + new String(bytes) + "\") to " + dgram.getAddress() + ':' + dgram.getPort());
                 socket.send(dgram);
             }catch(IOException ex) {
-
+                LOG.log(Level.WARNING, "", ex);
+            }finally{
+                if(socket != null) {
+                    socket.close();
+                }
             }
             Thread.sleep(DISCOVERY_INTERVAL);
         }
-    }
-
-
-    @Override
-    public void run() {
-        try{
-            startHost();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
 
     /**
