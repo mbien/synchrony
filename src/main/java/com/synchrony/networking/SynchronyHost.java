@@ -35,6 +35,8 @@ import java.util.logging.Logger;
  * @author blip
  */
 public class SynchronyHost extends Thread {
+    
+    private static final Logger LOG = Logger.getLogger(SynchronyHost.class.getName());
 
     public static final String MAGIC_STRING = "Hello! I'm a Synchrony Host";
 
@@ -50,6 +52,8 @@ public class SynchronyHost extends Thread {
     private String multicastAddress;
 
     private int multicastPort;
+
+    // <ID, timestamp>
     private final Map<String, Long> knownHosts;
 
     SynchronyHost(HostType hostType, String hostID, int bufferLength,
@@ -64,25 +68,21 @@ public class SynchronyHost extends Thread {
 
     }
 
-    public void startHost() throws IOException, InterruptedException {
+    public void startHost() throws InterruptedException {
 
         if (hostType == HostType.MulticastSender) {
-            startMulticastSender();
-        } else if (hostType == HostType.MulticastReceiver) {
             try {
-                startMulticastReceiver();
-            } catch (SocketException ex) {
-                Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ExecutionException ex) {
-                Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (TimeoutException ex) {
-                Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
+                startMulticastSender();
+            } catch (UnknownHostException ex) {
+                throw new RuntimeException("something is seriously wrong", ex);
             }
+        } else if (hostType == HostType.MulticastReceiver) {
+            startMulticastReceiver();
         }
 
     }
 
-    private void startMulticastReceiver() throws IOException, SocketException, InterruptedException, ExecutionException, TimeoutException {
+    private void startMulticastReceiver() throws InterruptedException {
 
         byte[] bytes = new byte[bufferLength];
 
@@ -91,12 +91,13 @@ public class SynchronyHost extends Thread {
 
         while (true) {
 
-            AsynchronousDatagramChannel channel = AsynchronousDatagramChannel.open(StandardProtocolFamily.INET, null);
-            channel.bind(new InetSocketAddress(multicastPort));
-
-            Future<SocketAddress> future = channel.receive(buffer); // non blocking
-
+            AsynchronousDatagramChannel channel = null;
             try{
+                channel = AsynchronousDatagramChannel.open(StandardProtocolFamily.INET, null);
+                channel.bind(new InetSocketAddress(multicastPort));
+
+                Future<SocketAddress> future = channel.receive(buffer); // non blocking
+
                 SocketAddress addr = future.get(DISCOVERY_INTERVAL*2, TimeUnit.SECONDS); // blocking
                 InetAddress senderAddress = ((InetSocketAddress) addr).getAddress();
 
@@ -116,39 +117,54 @@ public class SynchronyHost extends Thread {
 
                 }
             }catch(TimeoutException ex) {
-                Logger.getLogger(getClass().getName()).log(Level.WARNING, "timeout, continuing", ex);
+                LOG.log(Level.WARNING, "timeout, continuing", ex);
+            }catch(IOException ex) {
+                LOG.log(Level.WARNING, "continuing", ex);
+            }catch(ExecutionException ex) {
+                LOG.log(Level.WARNING, "continuing", ex);
             }finally{
-                channel.close();
+                if(channel != null) {
+                    try {
+                        channel.close();
+                    } catch (IOException ex) {
+                        LOG.log(Level.WARNING, "continuing", ex);
+                    }
+                }
             }
 
         }
     }
 
-    private void startMulticastSender() throws SocketException, UnknownHostException, IOException, InterruptedException {
+    private void startMulticastSender() throws InterruptedException, UnknownHostException {
 
         byte[] bytes = MAGIC_STRING.getBytes();
+
         InetAddress address = InetAddress.getByName(multicastAddress);
         DatagramPacket dgram = new DatagramPacket(bytes, bytes.length, address, multicastPort);
 
         while (true) {
-            DatagramSocket socket = new DatagramSocket();
+            try{
+                DatagramSocket socket = new DatagramSocket();
 
-            synchronized(knownHosts) {
-                long time = System.currentTimeMillis();
-                List<String> keysToRemove = new ArrayList<String>();
-                for (Map.Entry<String, Long> entry : knownHosts.entrySet()) {
-                    if(time-entry.getValue() > TIME_TILL_DEAD) {
-                        keysToRemove.add(entry.getKey());
+                synchronized(knownHosts) {
+                    long time = System.currentTimeMillis();
+                    List<String> keysToRemove = new ArrayList<>();
+                    for (Map.Entry<String, Long> entry : knownHosts.entrySet()) {
+                        if(time-entry.getValue() > TIME_TILL_DEAD) {
+                            keysToRemove.add(entry.getKey());
+                        }
+                    }
+                    for (String key : keysToRemove) {
+                        knownHosts.remove(key);
                     }
                 }
-                for (String key : keysToRemove) {
-                    knownHosts.remove(key);
-                }
-            }
 
-            //  System.err.print(".");
-            System.out.println("[Host " + hostID + "] MCS sent " + bytes.length + " bytes (\"" + new String(bytes) + "\") to " + dgram.getAddress() + ':' + dgram.getPort());
-            socket.send(dgram);
+                //  System.err.print(".");
+                System.out.println("[Host " + hostID + "] MCS sent " + bytes.length + " bytes (\"" + new String(bytes) + "\") to " + dgram.getAddress() + ':' + dgram.getPort());
+                socket.send(dgram);
+            }catch(IOException ex) {
+
+            }
             Thread.sleep(DISCOVERY_INTERVAL);
         }
     }
@@ -156,10 +172,8 @@ public class SynchronyHost extends Thread {
 
     @Override
     public void run() {
-        try {
+        try{
             startHost();
-        } catch (IOException ex) {
-            Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
             Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -171,7 +185,7 @@ public class SynchronyHost extends Thread {
      */
     private Set<String> getOwnIPs() throws SocketException {
 
-        Set<String> ips = new HashSet<String>();
+        Set<String> ips = new HashSet<>();
 
         Enumeration ifaces = NetworkInterface.getNetworkInterfaces();
 
