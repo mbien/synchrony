@@ -19,6 +19,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.AsynchronousDatagramChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,24 +43,21 @@ public class SynchronyHost {
 
     public static final long DISCOVERY_INTERVAL = 5000;
     public static final long TIME_TILL_DEAD = 2 * DISCOVERY_INTERVAL;
-    private final NodeListener listener;
 
-    private String hostID;
-    private int bufferLength;
-    private String multicastAddress;
+    private final NodeListener listener;
+    private final String multicastAddress;
 
     private int multicastPort;
 
     // <ID, timestamp>
     private final Map<Node, Long> knownHosts;
 
-    SynchronyHost(String hostID, int bufferLength, String multicastAddress, int multicastPort, Map<Node, Long> knownHosts, NodeListener listener) {
+    SynchronyHost(NodeListener listener) {
 
-        this.hostID = hostID;
-        this.bufferLength = bufferLength;
-        this.multicastAddress = multicastAddress;
-        this.multicastPort = multicastPort;
-        this.knownHosts = knownHosts;
+        //TODO load from properties
+        this.multicastAddress = "224.0.0.1";
+        this.multicastPort = 5000;
+        this.knownHosts = new HashMap<>();
         this.listener = listener;
     }
 
@@ -96,10 +94,10 @@ public class SynchronyHost {
 
     private void startMulticastReceiver() throws InterruptedException {
 
-        byte[] bytes = new byte[bufferLength];
+        byte[] bytes = new byte[MAGIC_STRING.getBytes().length];
 
         // direct bytebuffer (outside heap)
-        ByteBuffer buffer = ByteBuffer.allocateDirect(bufferLength).order(ByteOrder.nativeOrder());
+        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder());
 
         while (true) {
 
@@ -121,7 +119,6 @@ public class SynchronyHost {
 
                     buffer.rewind();
                     buffer.get(bytes);
-                    System.out.println("[Host " + hostID + "] MCR received " + bytes.length + " bytes (\"" + new String(bytes) + "\") from " + senderAddress.getHostAddress());
 
                     synchronized(knownHosts) {
                         Node node = new Node(senderAddress.getHostAddress()+" - "+hashCode());
@@ -179,8 +176,6 @@ public class SynchronyHost {
                     
                 }
 
-                //  System.err.print(".");
-                System.out.println("[Host " + hostID + "] MCS sent " + bytes.length + " bytes (\"" + new String(bytes) + "\") to " + dgram.getAddress() + ':' + dgram.getPort());
                 socket.send(dgram);
             }catch(IOException ex) {
                 LOG.log(Level.WARNING, "", ex);

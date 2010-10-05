@@ -13,12 +13,6 @@ public class SynchronyHostStarter {
 
     public static void main(String[] args) {
 
-        String hostID = args[0];
-        String mcAdress = args[1];
-        int multicastPort = Integer.parseInt(args[2]);
-
-        Map<Node, Long> knownHosts = new HashMap<>();
-
         NodeListener listener = new NodeListener() {
 
             @Override
@@ -35,7 +29,7 @@ public class SynchronyHostStarter {
         };
 
         // multicast sender to distribute lookups for possible synchrony hosts
-        SynchronyHost host = new SynchronyHost(hostID, 27, mcAdress, multicastPort, knownHosts, listener);
+        SynchronyHost host = new SynchronyHost(listener);
 
         host.startHost();
 
