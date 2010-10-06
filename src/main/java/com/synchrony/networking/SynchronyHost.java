@@ -19,6 +19,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.AsynchronousDatagramChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,69 +35,79 @@ import java.util.logging.Logger;
  *
  * @author blip
  */
-public class SynchronyHost extends Thread {
+public class SynchronyHost {
+    
+    private static final Logger LOG = Logger.getLogger(SynchronyHost.class.getName());
 
     public static final String MAGIC_STRING = "Hello! I'm a Synchrony Host";
 
     public static final long DISCOVERY_INTERVAL = 5000;
     public static final long TIME_TILL_DEAD = 2 * DISCOVERY_INTERVAL;
 
-    enum HostType {MulticastSender, MulticastReceiver}
-
-    private HostType hostType;
-
-    private String hostID;
-    private int bufferLength;
-    private String multicastAddress;
+    private final NodeListener listener;
+    private final String multicastAddress;
 
     private int multicastPort;
-    private final Map<String, Long> knownHosts;
 
-    SynchronyHost(HostType hostType, String hostID, int bufferLength,
-            String multicastAddress, int multicastPort, Map<String, Long> knownHosts) {
+    // <ID, timestamp>
+    private final Map<Node, Long> knownHosts;
 
-        this.hostType = hostType;
-        this.hostID = hostID;
-        this.bufferLength = bufferLength;
-        this.multicastAddress = multicastAddress;
-        this.multicastPort = multicastPort;
-        this.knownHosts = knownHosts;
+    SynchronyHost(NodeListener listener) {
 
+        //TODO load from properties
+        this.multicastAddress = "224.0.0.1";
+        this.multicastPort = 5000;
+        this.knownHosts = new HashMap<>();
+        this.listener = listener;
     }
 
-    public void startHost() throws IOException, InterruptedException {
+    public void startHost() {
 
-        if (hostType == HostType.MulticastSender) {
-            startMulticastSender();
-        } else if (hostType == HostType.MulticastReceiver) {
-            try {
-                startMulticastReceiver();
-            } catch (SocketException ex) {
-                Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ExecutionException ex) {
-                Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (TimeoutException ex) {
-                Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
+        Runnable sender = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    startMulticastSender();
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                } catch (UnknownHostException ex) {
+                    throw new RuntimeException("something is seriously wrong", ex);
+                }
             }
-        }
+        };
+        
+        Runnable receiver = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    startMulticastReceiver();
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        };
+
+        new Thread(receiver, "receiver").start();
+        new Thread(sender, "sender").start();
 
     }
 
-    private void startMulticastReceiver() throws IOException, SocketException, InterruptedException, ExecutionException, TimeoutException {
+    private void startMulticastReceiver() throws InterruptedException {
 
-        byte[] bytes = new byte[bufferLength];
+        byte[] bytes = new byte[MAGIC_STRING.getBytes().length];
 
         // direct bytebuffer (outside heap)
-        ByteBuffer buffer = ByteBuffer.allocateDirect(bufferLength).order(ByteOrder.nativeOrder());
+        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder());
 
         while (true) {
 
-            AsynchronousDatagramChannel channel = AsynchronousDatagramChannel.open(StandardProtocolFamily.INET, null);
-            channel.bind(new InetSocketAddress(multicastPort));
-
-            Future<SocketAddress> future = channel.receive(buffer); // non blocking
-
+            AsynchronousDatagramChannel channel = null;
             try{
+                channel = AsynchronousDatagramChannel.open(StandardProtocolFamily.INET, null);
+                channel.bind(new InetSocketAddress(multicastPort));
+
+                Future<SocketAddress> future = channel.receive(buffer); // non blocking
+
                 SocketAddress addr = future.get(DISCOVERY_INTERVAL*2, TimeUnit.SECONDS); // blocking
                 InetAddress senderAddress = ((InetSocketAddress) addr).getAddress();
 
@@ -108,62 +119,73 @@ public class SynchronyHost extends Thread {
 
                     buffer.rewind();
                     buffer.get(bytes);
-                    System.out.println("[Host " + hostID + "] MCR received " + bytes.length + " bytes (\"" + new String(bytes) + "\") from " + senderAddress.getHostAddress());
 
                     synchronized(knownHosts) {
-                        knownHosts.put(senderAddress.getHostAddress(), System.currentTimeMillis());
+                        Node node = new Node(senderAddress.getHostAddress()+" - "+hashCode());
+                        Long old = knownHosts.put(node, System.currentTimeMillis());
+                        if(old != null) {
+                            // new host discovered
+                            listener.nodeDiscovered(node, new ArrayList<Node>(knownHosts.keySet()));
+                        }
                     }
 
                 }
             }catch(TimeoutException ex) {
-                Logger.getLogger(getClass().getName()).log(Level.WARNING, "timeout, continuing", ex);
+                LOG.log(Level.WARNING, "timeout, continuing", ex);
+            }catch(IOException ex) {
+                LOG.log(Level.WARNING, "continuing", ex);
+            }catch(ExecutionException ex) {
+                LOG.log(Level.WARNING, "continuing", ex);
             }finally{
-                channel.close();
+                if(channel != null) {
+                    try {
+                        channel.close();
+                    } catch (IOException ex) {
+                        LOG.log(Level.WARNING, "continuing", ex);
+                    }
+                }
             }
 
         }
     }
 
-    private void startMulticastSender() throws SocketException, UnknownHostException, IOException, InterruptedException {
+    private void startMulticastSender() throws InterruptedException, UnknownHostException {
 
         byte[] bytes = MAGIC_STRING.getBytes();
+
         InetAddress address = InetAddress.getByName(multicastAddress);
         DatagramPacket dgram = new DatagramPacket(bytes, bytes.length, address, multicastPort);
 
         while (true) {
-            DatagramSocket socket = new DatagramSocket();
+            DatagramSocket socket = null;
+            try{
+                socket = new DatagramSocket();
 
-            synchronized(knownHosts) {
-                long time = System.currentTimeMillis();
-                List<String> keysToRemove = new ArrayList<String>();
-                for (Map.Entry<String, Long> entry : knownHosts.entrySet()) {
-                    if(time-entry.getValue() > TIME_TILL_DEAD) {
-                        keysToRemove.add(entry.getKey());
+                synchronized(knownHosts) {
+                    long time = System.currentTimeMillis();
+                    List<Node> keysToRemove = new ArrayList<>();
+                    for (Map.Entry<Node, Long> entry : knownHosts.entrySet()) {
+                        if(time-entry.getValue() > TIME_TILL_DEAD) {
+                            keysToRemove.add(entry.getKey());
+                        }
                     }
+                    for (Node node : keysToRemove) {
+                        knownHosts.remove(node);
+                        listener.nodeLost(node, new ArrayList<Node>(knownHosts.keySet()));
+                    }
+                    
                 }
-                for (String key : keysToRemove) {
-                    knownHosts.remove(key);
+
+                socket.send(dgram);
+            }catch(IOException ex) {
+                LOG.log(Level.WARNING, "", ex);
+            }finally{
+                if(socket != null) {
+                    socket.close();
                 }
             }
-
-            //  System.err.print(".");
-            System.out.println("[Host " + hostID + "] MCS sent " + bytes.length + " bytes (\"" + new String(bytes) + "\") to " + dgram.getAddress() + ':' + dgram.getPort());
-            socket.send(dgram);
             Thread.sleep(DISCOVERY_INTERVAL);
         }
-    }
-
-
-    @Override
-    public void run() {
-        try {
-            startHost();
-        } catch (IOException ex) {
-            Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(SynchronyHost.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
 
     /**
@@ -171,7 +193,7 @@ public class SynchronyHost extends Thread {
      */
     private Set<String> getOwnIPs() throws SocketException {
 
-        Set<String> ips = new HashSet<String>();
+        Set<String> ips = new HashSet<>();
 
         Enumeration ifaces = NetworkInterface.getNetworkInterfaces();
 
