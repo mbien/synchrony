@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.synchrony.mina.sumup.message;
+package com.synchrony.examples.mina.sumup.message;
 
 
 

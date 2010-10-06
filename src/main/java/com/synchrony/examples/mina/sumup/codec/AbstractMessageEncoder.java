@@ -3,11 +3,11 @@
  * and open the template in the editor.
  */
 
-package com.synchrony.mina.sumup.codec;
+package com.synchrony.examples.mina.sumup.codec;
 
 
 
-import com.synchrony.mina.sumup.message.AbstractMessage;
+import com.synchrony.examples.mina.sumup.message.AbstractMessage;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;

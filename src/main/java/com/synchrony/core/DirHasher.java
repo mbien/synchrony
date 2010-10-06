@@ -1,9 +1,9 @@
-package com.synchrony.prototype;
+package com.synchrony.core;
 
-import com.synchrony.prototype.util.RecursiveDirWatcher;
-import com.synchrony.prototype.util.HashBuilder;
-import com.synchrony.prototype.util.DirEventListener;
-import com.synchrony.prototype.util.IOUtils;
+import com.synchrony.util.RecursiveDirWatcher;
+import com.synchrony.util.HashBuilder;
+import com.synchrony.util.DirEventListener;
+import com.synchrony.util.IOUtils;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;

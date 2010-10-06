@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.synchrony.mina;
+package com.synchrony.examples.mina.timeserver;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

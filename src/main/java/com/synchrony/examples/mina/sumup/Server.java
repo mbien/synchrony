@@ -3,9 +3,9 @@
  * and open the template in the editor.
  */
 
-package com.synchrony.mina.sumup;
+package com.synchrony.examples.mina.sumup;
 
-import com.synchrony.mina.sumup.codec.SumUpProtocolCodecFactory;
+import com.synchrony.examples.mina.sumup.codec.SumUpProtocolCodecFactory;
 import java.net.InetSocketAddress;
 
 import org.apache.mina.filter.codec.ProtocolCodecFilter;

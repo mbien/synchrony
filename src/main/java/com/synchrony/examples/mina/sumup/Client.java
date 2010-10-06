@@ -1,4 +1,4 @@
-package com.synchrony.mina.sumup;
+package com.synchrony.examples.mina.sumup;
 
 /*
  * To change this template, choose Tools | Templates
@@ -26,7 +26,7 @@ package com.synchrony.mina.sumup;
  */
 
 
-import com.synchrony.mina.sumup.codec.SumUpProtocolCodecFactory;
+import com.synchrony.examples.mina.sumup.codec.SumUpProtocolCodecFactory;
 import java.net.InetSocketAddress;
 
 import org.apache.mina.core.RuntimeIoException;

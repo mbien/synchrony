@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.synchrony.mina.sumup;
+package com.synchrony.examples.mina.sumup;
 
 
 
@@ -28,8 +28,8 @@ package com.synchrony.mina.sumup;
  */
 
 
-import com.synchrony.mina.sumup.message.AddMessage;
-import com.synchrony.mina.sumup.message.ResultMessage;
+import com.synchrony.examples.mina.sumup.message.AddMessage;
+import com.synchrony.examples.mina.sumup.message.ResultMessage;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;

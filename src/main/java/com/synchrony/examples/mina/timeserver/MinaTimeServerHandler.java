@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.synchrony.mina;
+package com.synchrony.examples.mina.timeserver;
 
 import java.util.Date;
 import org.apache.mina.core.service.IoHandlerAdapter;

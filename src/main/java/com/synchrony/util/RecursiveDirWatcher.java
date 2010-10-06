@@ -1,4 +1,4 @@
-package com.synchrony.prototype.util;
+package com.synchrony.util;
 
 import java.io.IOError;
 import java.io.IOException;
