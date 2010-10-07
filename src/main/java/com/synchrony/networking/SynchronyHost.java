@@ -4,6 +4,7 @@
  */
 package com.synchrony.networking;
 
+import com.synchrony.config.Config;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -34,6 +35,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author blip
+ * @author mbien
  */
 public class SynchronyHost {
     
@@ -41,22 +43,21 @@ public class SynchronyHost {
 
     public static final String MAGIC_STRING = "Hello! I'm a Synchrony Host";
 
-    public static final long DISCOVERY_INTERVAL = 5000;
-    public static final long TIME_TILL_DEAD = 2 * DISCOVERY_INTERVAL;
+    public final long DISCOVERY_INTERVAL = 5000;
+    public final long TIME_TILL_DEAD = 2 * DISCOVERY_INTERVAL;
 
     private final NodeListener listener;
     private final String multicastAddress;
 
-    private int multicastPort;
+    private final int multicastPort;
 
     // <ID, timestamp>
     private final Map<Node, Long> knownHosts;
 
-    SynchronyHost(NodeListener listener) {
+    SynchronyHost(Config config, NodeListener listener) {
 
-        //TODO load from properties
-        this.multicastAddress = "224.0.0.1";
-        this.multicastPort = 5000;
+        this.multicastAddress = config.multicastaddress;
+        this.multicastPort = config.multicastport;
         this.knownHosts = new HashMap<>();
         this.listener = listener;
     }
