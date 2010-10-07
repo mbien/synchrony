@@ -1,4 +1,4 @@
-package com.synchrony.prototype;
+package com.synchrony.core;
 
 import com.synchrony.core.DirHasher;
 import com.synchrony.util.IOUtils;
