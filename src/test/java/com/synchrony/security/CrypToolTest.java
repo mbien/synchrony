@@ -98,6 +98,25 @@ public class CrypToolTest {
      * There should be no identical strings.
      */
     @Test
-    public void testRandomStringGeneration() {
+    public void testRandomStringGeneration() throws Exception {
+
+        String z = CrypToolUtil.generateRandomString(32);
+        String key = CrypToolUtil.generateRandomString(32);
+
+        System.out.println("z: \t" + CrypToolUtil.byteArrayToHexString(z.getBytes()));
+        System.out.println("key: \t" +CrypToolUtil.byteArrayToHexString(key.getBytes()));
+
+        byte[] xorByteArray = CrypToolUtil.xorByteArray(z.getBytes(), key.getBytes());
+        System.out.println("Xor: \t" +CrypToolUtil.byteArrayToHexString(xorByteArray));
+
+        xorByteArray = CrypToolUtil.xorByteArray(key.getBytes(), xorByteArray);
+        System.out.println("Xor² (z again): \t" +CrypToolUtil.byteArrayToHexString(xorByteArray));
+
+
+        System.out.println(CrypToolUtil.byteArrayToHexString(CrypToolUtil.xorByteArray(z.getBytes(), key.getBytes())));
+        System.out.println(CrypToolUtil.byteArrayToHexString(CrypToolUtil.xorByteArray(key.getBytes(), z.getBytes())));
+
+
+
     }
 }

@@ -1,9 +1,7 @@
 
 package com.synchrony.networking;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -13,7 +11,11 @@ public class SynchronyHostStarter {
 
     public static void main(String[] args) {
 
+        List<Node> allNodes;
+
         NodeListener listener = new NodeListener() {
+
+
 
             @Override
             public void nodeDiscovered(Node node, List<Node> all) {
@@ -26,12 +28,17 @@ public class SynchronyHostStarter {
                 System.out.println("node died "+node);
                 System.out.println("all nodes: "+all);
             }
+
         };
 
         // multicast sender to distribute lookups for possible synchrony hosts
         SynchronyHost host = new SynchronyHost(listener);
 
         host.startHost();
+        
+        
+
+
 
     }
 }

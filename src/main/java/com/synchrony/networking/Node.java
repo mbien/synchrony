@@ -14,9 +14,22 @@ public class Node {
     
     private final String name;
 
+    private byte[] sessionKeyReceive = null;
+
+    private  byte[] sessionKeySend = null;
+
+
     Node(String hostAddress) {
         this.name = hostAddress;
 
+    }
+
+    public void setSessionKeyReceive(byte[] key) {
+        this.sessionKeyReceive = key;
+    }
+    
+    public void setSessionKeySend(byte[] key) {
+        this.sessionKeySend = key;
     }
 
     @Override
