@@ -1,4 +1,4 @@
-package com.synchrony.ui;
+package com.synchrony.ui.config;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

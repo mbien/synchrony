@@ -1,4 +1,4 @@
-package com.synchrony.ui;
+package com.synchrony.ui.config;
 
 import java.io.File;
 import javax.swing.JFileChooser;

@@ -1,9 +1,10 @@
-package com.synchrony.ui;
+package com.synchrony.ui.tray;
 
 /**
  *
  * @author Simon Bauer
  */
+import com.synchrony.ui.config.ConfigureListener;
 import java.awt.*;
 
 /*

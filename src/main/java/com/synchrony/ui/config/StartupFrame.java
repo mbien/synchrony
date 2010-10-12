@@ -1,17 +1,11 @@
-package com.synchrony.ui;
+package com.synchrony.ui.config;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -69,16 +63,6 @@ public class StartupFrame extends javax.swing.JFrame {
         JLabel jLabel9 = new JLabel();
         pathTextField = new JTextField();
         JButton jButton5 = new JButton();
-        JMenuBar jMenuBar1 = new JMenuBar();
-        JMenu jMenu1 = new JMenu();
-        JMenuItem jMenuItem1 = new JMenuItem();
-        JMenuItem jMenuItem2 = new JMenuItem();
-        JMenu jMenu2 = new JMenu();
-        JMenuItem jMenuItem3 = new JMenuItem();
-        JMenuItem jMenuItem4 = new JMenuItem();
-        JMenu jMenu3 = new JMenu();
-        JMenuItem jMenuItem5 = new JMenuItem();
-        JMenuItem jMenuItem6 = new JMenuItem();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -170,7 +154,7 @@ public class StartupFrame extends javax.swing.JFrame {
                 .addComponent(jLabel8)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(141, Short.MAX_VALUE))
+                .addContainerGap(168, Short.MAX_VALUE))
         );
 
         jLabel9.setFont(new Font("Tahoma", 2, 18));
@@ -204,7 +188,7 @@ public class StartupFrame extends javax.swing.JFrame {
                     .addGroup(Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                         .addPreferredGap(ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(Alignment.BASELINE)
                             .addComponent(jButton3)
@@ -214,38 +198,6 @@ public class StartupFrame extends javax.swing.JFrame {
         );
 
         jButton5.setText("Browse...");
-
-        jMenu1.setText("File");
-
-        jMenuItem1.setText("jMenuItem1");
-        jMenu1.add(jMenuItem1);
-
-        jMenuItem2.setText("jMenuItem2");
-        jMenu1.add(jMenuItem2);
-
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Edit");
-
-        jMenuItem3.setText("jMenuItem3");
-        jMenu2.add(jMenuItem3);
-
-        jMenuItem4.setText("jMenuItem4");
-        jMenu2.add(jMenuItem4);
-
-        jMenuBar1.add(jMenu2);
-
-        jMenu3.setText("Help");
-
-        jMenuItem5.setText("jMenuItem4");
-        jMenu3.add(jMenuItem5);
-
-        jMenuItem6.setText("jMenuItem5");
-        jMenu3.add(jMenuItem6);
-
-        jMenuBar1.add(jMenu3);
-
-        setJMenuBar(jMenuBar1);
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
