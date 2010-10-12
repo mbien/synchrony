@@ -21,7 +21,7 @@ public class CrypTool {
     private static String encryptionMode = "AES/ECB/PKCS5Padding";
     private static int BLOCK_SIZE = 1024;
     
-    public static int PASSWORD_SIZE = 32;
+    public static int PASSWORD_SIZE = 16;
     
     public static void main(String[] args) {
 
@@ -132,7 +132,7 @@ public class CrypTool {
 
         SecretKey secretKey = null;
 
-        if (password.length == 32) {
+        if (password.length == PASSWORD_SIZE) {
             secretKey = new SecretKeySpec(password, "AES");
         } else {
             throw new RuntimeException("Password size was not correct!");

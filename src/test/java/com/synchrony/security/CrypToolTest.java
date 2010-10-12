@@ -37,7 +37,7 @@ public class CrypToolTest {
     @Test
     public void testEncryptionAndDecrytion() {
         try {
-            String randomString = CrypTool.getRandomString(32);
+            String randomString = CrypTool.getRandomString(CrypTool.PASSWORD_SIZE);
             System.out.println("randomString (" + randomString.length() + "): " + randomString);
 
             byte[] cipherText = CrypTool.encrypt(password.getBytes(), randomString.getBytes());
@@ -71,7 +71,7 @@ public class CrypToolTest {
     public void testSessionKeyUsage() {
 
         try {
-            byte[] randomString = CrypTool.getRandomString(32).getBytes();
+            byte[] randomString = CrypTool.getRandomString(CrypTool.PASSWORD_SIZE).getBytes();
             System.out.println("randomString (" + randomString.length + "): " + new String(randomString));
 
             byte[] sessionKeyString = CrypTool.getSessionKeyString(randomString, CrypToolUtil.fitToPasswordLength(password).getBytes());
@@ -94,14 +94,14 @@ public class CrypToolTest {
 
     /**
      * Tests the random string generation. For example, this tests let
-     * generate about 1000000 random strings with a length of 32 bytes.
+     * generate about 1000000 random strings with a length of CrypTool.PASSWORD_SIZE bytes.
      * There should be no identical strings.
      */
     @Test
     public void testRandomStringGeneration() throws Exception {
 
-        String z = CrypToolUtil.generateRandomString(32);
-        String key = CrypToolUtil.generateRandomString(32);
+        String z = CrypToolUtil.generateRandomString(CrypTool.PASSWORD_SIZE);
+        String key = CrypToolUtil.generateRandomString(CrypTool.PASSWORD_SIZE);
 
         System.out.println("z: \t" + CrypToolUtil.byteArrayToHexString(z.getBytes()));
         System.out.println("key: \t" +CrypToolUtil.byteArrayToHexString(key.getBytes()));
