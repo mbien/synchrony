@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Created on : October 6, 2010, 12:58 PM
+    Author     : mbien
+    Description:
+        test configuration for junit purposes.
+-->
+
+<config>
+
+    <multicastaddress>224.0.0.1</multicastaddress>
+    
+    <multicastport>5001</multicastport>
+    <unicastport>5001</unicastport>
+    <heartbeat>5000</heartbeat>
+
+    <watcher name="folder1">
+        <enabled>true</enabled>
+        <path>/temp/f1</path>
+    </watcher>
+    
+    <watcher name="folder2">
+        <enabled>true</enabled>
+        <path>/temp/f2</path>
+    </watcher>
+
+</config>

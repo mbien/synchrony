@@ -241,10 +241,11 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
 \vspace*{70pt}
 \textsf{\textbf{\Huge{Dokumentation zum Studienprojekt}}} \\
 \vspace*{20pt}
-\textsf{\textbf{\large{Verteilter Dateisynchronisationsdienst \vspace*{20pt} Synchrony}}}\\\end{center}
+\textsf{\textbf{\large{Verteilter Dateisynchronisationsdienst \vspace*{20pt} Synchrony}}}\\
+\end{center}
 \vspace*{180pt}
 
-\textsf{\large{Stand: 11.05.2010}}\\
+\textsf{\large{Stand: 01.10.2010}}\\
 \vspace*{20pt}
 \\ 
 
@@ -268,8 +269,8 @@ Betreuer: \hspace*{0.95cm}Prof. Dr. Wolfgang Jürgensen\\
 \thispagestyle{empty}
 \section*{Kurzzusammenfassung}
 Text Text ...
-\section*{Abstract}
-Wenn gewünscht, auch noch eine englische Zusammenfassung...
+%\section*{Abstract}
+%Wenn gewünscht, auch noch eine englische Zusammenfassung...
 
 \newpage
 %\thispagestyle{empty}
@@ -297,31 +298,116 @@ Wenn gewünscht, auch noch eine englische Zusammenfassung...
 
 %\newpage
 
-\section{Kapitelüberschrift}
+\section{Dateisynchronisationsdienst Synchrony}
+Einführungstext oder kein Text
+
+\vspace{12px}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-\subsection{Abschnittsüberschrift}
+\subsection{Informationen für Anwender}
+Kurzer Text, was \textit{Synchrony} alles kann und für was man es verwenden könnte und wie es ich bedienen lässt. Evtl. ein kleiner User's Guide zum Starten und erstmaligen Einrichten (Ordnerwahl über Konfigurationsdatei oder Optionsmenü aus Systemtray).
+
+\vspace{12px}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-\subsection{Abschnittsüberschrift}
+\subsection{Informationen für Entwickler}
+Kurze Übersicht über die Eigenschaften des Projekts: Sourcecode ist open Sourche und liegt auf git (Adresse hier..), Maven-Projekt, MINA-Framework, Verwendung von nightly builds von JDK7 (Neuerungen, Vorteile); Entwicklungsumgebung ist Ubuntu Linux 8.04 - 10.10 mit Netbeans 6.7 - 6.9; Automatisierte Tests wurden verwendet usw.
+\vspace{12px}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+\newpage
+\section{Funktionsumfang}
+Einführungstext oder kein Text
+
+\vspace{12px}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Dateisystem}
+\begin{itemize}
+\item \textit{Synchrony} wird als Benutzerdienst nach Einloggen autom. gestartet und über JDK7-Funktionialitäten an das Filesystem gehängt und bekommt so Events wie CREATE, DELETE, MODIFY von Objekten (Ordnern oder Dateien) im zu überwachenden Ordnern/Filesytemen mit, ohne permanent das Filesystem zu scannen oder andere leistungsraubende Aktivitäten durchzuführen
+\item Zu überwachende Ordner werden in einer Baumstruktur abgebildet und weitere Informationen im versteckten Ordner \texttt{.synchrony} im Benutzerordner abgelegt.
+\item Änderungen von entfernten Hosts werden mit dem aktuellen Stand des lokalen Systems abgeglichen.
+\end{itemize}
+\vspace{12px}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Netzwerk}
+\begin{itemize}
+\item \textit{Synchrony} beginnt nach seinem Start das Netzwerk über Multicasts nach anderen Hosts zu scannen, in einem ein wählbaren Intervall werden diese Abfragen permanent wiederholt neue Hosts finden zu können
+\item Es wird eine Liste von aktiven Hosts im gleichen Netzwerk geführt. Neue oder wegfallende Hosts werden zeitnah bemerkt und so eine relativ verlässliche Liste erstellt. Vor der eigentlichen Datenkommunikation wird natürlich die Erreichbarkeit jedes einzelnen Hosts kurz überprüft um Fehler zu vermeiden.
+\item Netzwerkservice basiert auf MINA, bla bla
+\end{itemize}
+\vspace{12px}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 \subsection{Abschnittsüberschrift}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
-\section{Kapitelüberschrift}
+\newpage
+\section{Benutzerschnittstelle}
+Einführungstext oder kein Text
+
+\vspace{12px}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-\subsection{Abschnittsüberschrift}
+\subsection{Systemtray}
+Eintrag im Systemtray mit kleinem Icon ist die primäre Benutzerschnittstelle. Kontextmenü ermöglicht Aktionen wie START, STOP/CONTINUE, QUIT von Teilen des Dienstes oder des kompletten Dienstes. Des weiteren soll ein Optionsmenü erreicht werden, das Einstellungen wie die zu überwachenden Ordnern oder Konstanten wie Bandbreite, Ports, Zeitintervalle (Host Discovery oder Time to Dead ...) ermöglichen soll. Alle Einstellungen werden dann in der aktuellen Programmsession ohne Neustart übernommen und für Persistenz in der Konfigurationsdatei (siehe später in der Doku) abgelegt um beim nächsten Neustart der SW eingelesen werden zu können.
+
+\vspace{12px}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-\subsection{Abschnittsüberschrift}
+\subsection{Optionsmenü}
+siehe systemtray..
+
+\vspace{12px}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-\subsection{Abschnittsüberschrift}
+\subsection{Benachrichtigungssystem}
+Benachrichtungssystem ist auch wichtig. Siehe hierzu den Screenshot im Pflichtheft. Hier wurde der Gnome-Notifier hergenommen. Für Nicht-Gnome-Systeme muss eine generische Lösung zusätzlich geschaffen werden über Swing/AWT, aber hier gibt es ja genug Beispiele..
+
+\vspace{12px}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
-\section{Kapitelüberschrift}
+\newpage
+\section{Dateien}
+Einführungstext oder kein Text. Alle Dateien liegein in \texttt{.synchrony} des jeweiligen Benutzers.
+
+\vspace{12px}
+re et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Hashdateien}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et 
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Konfigurationsdatei}
+\texttt{synchrony.properties}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-\subsection{Abschnittsüberschrift}
+\subsection{Logdateien}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-\subsection{Abschnittsüberschrift}
+
+\newpage
+\section{Sicherheit}
+Einführungstext oder kein Text. Alle Dateien liegein in \texttt{.synchrony} des jeweiligen Benutzers.
+
+\vspace{12px}
+re et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Authentifizierung}
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et 
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Verschlüsselte Kommunikation}
+
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-\subsection{Abschnittsüberschrift}
+et.
+
+
+\newpage
+\section{Projekttruktur}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+\subsection{Struktur des Source Codes}
+\subsubsection{\texttt{com.synchrony.core}}
+Alle Funktionalitäten hinsichtlich der Dateioperationen. DirWatcher etc...
+\subsubsection{\texttt{com.synchrony.network}}
+Host-Discovery und -Management: \texttt{SynchronyHostManager.java}\\
+Kommunikationsserver um Meldungen empfangen zu können: \texttt{SynchronyCommunicationServer.java} und \texttt{SynchronyCommunicationServerHandler.java} (MINA)\\
+Kommunikationsclient um Meldungen zu verbreiten: \texttt{SynchronyCommunicationClient.java} und \texttt{SynchronyCommunicationClientHandler.java} (MINA)\\
+\subsubsection{\texttt{com.synchrony.security}}
+Klassen für Authentifizierung und Verschlüsselung
+\subsubsection{\texttt{com.synchrony.ui}}
+Klassen für Systemnotification, Optionsmenü, Systemtray, Icons...
+\subsubsection{\texttt{com.synchrony.util}}
+Konstanten, Logdateizugriff, Konfigdateizugriff...
+\subsection{Struktur des Testklassen}
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
 \newpage
@@ -361,7 +447,7 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 %\setcounter{figure}{0}
 
 
-\section{Anhang: Beispiel AES-Verschlüsselung mit der Sun JCE}
+\section{Anhang: Konfigurationsdateien}
 AES-Verschlüsselung mit der Sun JCE
 Einkommentieren !
 %\lstinputlisting[captionpos=b, caption=JCE AES Example]{listings/appendix/1_jcaAesExample.java}
@@ -388,12 +474,12 @@ Einkommentieren !
 %\newpage
 
 
-\section{Anhang: Abbildung JMX-Konsole}
+\section{Anhang: Ergebnisse der JUnit-Tests}
 \begin{figure}[h]					
 \centering
 Einkommentieren!
 %\includegraphics[scale=0.75]{pics/7_jmx_console.png}		% Grafikeinbindung mit Dateiname und Groessenangabe			% ([width=], [height=], [scale=1.00]...)
-\caption{Screenshot der JMX-Weboberfläche}		% Bildbeschriftung
+\caption{Screenshot der Weboberfläche}		% Bildbeschriftung
 \label{fig:Fabrikmethode}							% Sprungmarke fuer Verweise
 \end{figure} 	\vspace{-12pt}
 
@@ -425,7 +511,7 @@ Folgendes Bild ist im Abbildungsverzeichnis:
 \centering 
 Einkommentieren!
 %\includegraphics[scale=1.0]{pics/giesecke_devrient_ger.png}		% Grafikeinbindung mit Dateiname und Groessenangabe												% ([width=], [height=], [scale=1.00]...)
-\caption{Logo von Giesecke \& Devrient}									% Bildbeschriftung
+\caption{Bild x von Information Y}									% Bildbeschriftung
 \label{fig:LogoGD}												% Sprungmarke fuer Verweise
 \end{figure}
 
@@ -441,7 +527,7 @@ So können z.B. Tabellen, die als Bilddatei vorliegen als Tabelle betitelt und a
 \centering 
 Einkommentieren!
 %\includegraphics[scale=1.0]{pics/giesecke_devrient_ger.png}		% Grafikeinbindung mit Dateiname und Groessenangabe													% ([width=], [height=], [scale=1.00]...)
-\caption{Logo von Giesecke \& Devrient als Tabelle deklariert}									% Bildbeschriftung
+\caption{Bild als Tabelle deklariert}									% Bildbeschriftung
 \label{fig:LogoGD}												% Sprungmarke fuer Verweise
 \end{table}
 

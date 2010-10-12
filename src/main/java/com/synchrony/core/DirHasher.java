@@ -1,9 +1,9 @@
-package com.synchrony.prototype;
+package com.synchrony.core;
 
-import com.synchrony.prototype.util.RecursiveDirWatcher;
-import com.synchrony.prototype.util.HashBuilder;
-import com.synchrony.prototype.util.DirEventListener;
-import com.synchrony.prototype.util.IOUtils;
+import com.synchrony.util.RecursiveDirWatcher;
+import com.synchrony.util.HashBuilder;
+import com.synchrony.util.DirEventListener;
+import com.synchrony.util.IOUtils;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -44,7 +44,7 @@ public class DirHasher implements DirEventListener {
 
     public DirHasher(Path dir) throws IOException {
 
-        recentlyDeleted = new LinkedList<Path>();
+        recentlyDeleted = new LinkedList<>();
         try {
             hashBuilder = new HashBuilder();
         } catch (NoSuchAlgorithmException ex) {
@@ -73,7 +73,7 @@ public class DirHasher implements DirEventListener {
         log.info("rebuilding hash tree");
 
         // initial hashing
-        SimpleFileVisitor walker = new SimpleFileVisitor<Path>() {
+        SimpleFileVisitor<Path> walker = new SimpleFileVisitor<Path>() {
 
             @Override
             public FileVisitResult preVisitDirectory(Path dir) {
@@ -119,7 +119,7 @@ public class DirHasher implements DirEventListener {
                     System.out.println("folder moved");
 
                     //visit updated tree
-                    SimpleFileVisitor patchUpdater = new SimpleFileVisitor<Path>() {
+                    SimpleFileVisitor<Path> patchUpdater = new SimpleFileVisitor<Path>() {
 
                         @Override
                         public FileVisitResult preVisitDirectory(Path dir) {
@@ -190,7 +190,7 @@ public class DirHasher implements DirEventListener {
 
                     final IOException[] exception = new IOException[1];
                     
-                    SimpleFileVisitor hashMatcher = new SimpleFileVisitor<Path>() {
+                    SimpleFileVisitor<Path> hashMatcher = new SimpleFileVisitor<Path>() {
                         @Override
                         public FileVisitResult visitFile(Path checkSumFile, BasicFileAttributes attrs) {
                             try {
@@ -252,7 +252,7 @@ public class DirHasher implements DirEventListener {
         Path hashFile = Paths.get(dest + "." + hashBuilder.HASH_ALGORITHM);
         
         if(hashFile.exists()) {
-            if(IOUtils.compateModificationTimes(file, hashFile) > 0)
+            if(IOUtils.compareModificationTimes(file, hashFile) > 0)
                 hashBuilder.storeHashFile(file, dest);
         }else{
             hashBuilder.storeHashFile(file, dest);

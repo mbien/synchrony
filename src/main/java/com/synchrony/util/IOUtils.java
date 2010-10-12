@@ -1,4 +1,4 @@
-package com.synchrony.prototype.util;
+package com.synchrony.util;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -58,7 +58,7 @@ public class IOUtils {
     /**
      * @see java.​nio.​file.​attribute.​FileTime#compareTo(FileTime other)
      */
-    public static int compateCreationTimes(Path file1, Path file2) throws IOException {
+    public static int compareCreationTimes(Path file1, Path file2) throws IOException {
 
         FileTime time1 = Attributes.readBasicFileAttributes(file1, LinkOption.NOFOLLOW_LINKS).creationTime();
         FileTime time2 = Attributes.readBasicFileAttributes(file2, LinkOption.NOFOLLOW_LINKS).creationTime();
@@ -69,7 +69,7 @@ public class IOUtils {
     /**
      * @see java.​nio.​file.​attribute.​FileTime#compareTo(FileTime other)
      */
-    public static int compateModificationTimes(Path file1, Path file2) throws IOException {
+    public static int compareModificationTimes(Path file1, Path file2) throws IOException {
 
         FileTime time1 = Attributes.readBasicFileAttributes(file1, LinkOption.NOFOLLOW_LINKS).lastModifiedTime();
         FileTime time2 = Attributes.readBasicFileAttributes(file2, LinkOption.NOFOLLOW_LINKS).lastModifiedTime();
@@ -80,7 +80,7 @@ public class IOUtils {
     /**
      * @see java.​nio.​file.​attribute.​FileTime#compareTo(FileTime other)
      */
-    public static int compateAccessTimes(Path file1, Path file2) throws IOException {
+    public static int compareAccessTimes(Path file1, Path file2) throws IOException {
 
         FileTime time1 = Attributes.readBasicFileAttributes(file1, LinkOption.NOFOLLOW_LINKS).lastAccessTime();
         FileTime time2 = Attributes.readBasicFileAttributes(file2, LinkOption.NOFOLLOW_LINKS).lastAccessTime();

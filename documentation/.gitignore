@@ -3,5 +3,8 @@
 *.lot
 *.log
 *.toc
+*.out
+*.swo
+*.swp
 pflichtenheft.pdf
 doku.pdf

@@ -1,4 +1,4 @@
-package com.synchrony.prototype.util;
+package com.synchrony.util;
 
 import java.io.IOError;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -24,7 +23,7 @@ import static java.nio.file.LinkOption.*;
 
 public class RecursiveDirWatcher {
 
-    private final Logger log = Logger.getLogger(RecursiveDirWatcher.class.getName());
+    private static final Logger log = Logger.getLogger(RecursiveDirWatcher.class.getName());
 
     private final WatchService watcher;
     private final Map<WatchKey, Path> keys;
@@ -39,7 +38,7 @@ public class RecursiveDirWatcher {
     public RecursiveDirWatcher(Path dir, DirEventListener listener, Filter filter) throws IOException {
 
         this.watcher = FileSystems.getDefault().newWatchService();
-        this.keys = new HashMap<WatchKey, Path>();
+        this.keys = new HashMap<>();
         this.rootDir = dir;
         this.listener = listener;
         this.filter = filter;
@@ -58,7 +57,7 @@ public class RecursiveDirWatcher {
      */
     private void watchFolder(Path start) throws IOException {
 
-        SimpleFileVisitor walker = new SimpleFileVisitor<Path>() {
+        SimpleFileVisitor<Path> walker = new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir) {
 

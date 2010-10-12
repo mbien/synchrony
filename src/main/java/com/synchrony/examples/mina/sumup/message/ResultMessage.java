@@ -1,0 +1,49 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package com.synchrony.examples.mina.sumup.message;
+
+
+/**
+ * <code>RESULT</code> message in SumUp protocol.
+ *
+ * @author <a href="http://mina.apache.org">Apache MINA Project</a>
+ */
+public class ResultMessage extends AbstractMessage {
+    private static final long serialVersionUID = 7371210248110219946L;
+
+    private boolean ok;
+
+    private int value;
+
+    public ResultMessage() {
+    }
+
+    public boolean isOk() {
+        return ok;
+    }
+
+    public void setOk(boolean ok) {
+        this.ok = ok;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        if (ok) {
+            return getSequence() + ":RESULT(" + value + ')';
+        } else {
+            return getSequence() + ":RESULT(ERROR)";
+        }
+    }
+}
+

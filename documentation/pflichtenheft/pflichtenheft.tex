@@ -167,18 +167,21 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
 %caption={Java-Code} % Caption
 }
 
-%\usepackage[%
-%		pdftex,
-%		colorlinks,
- %   bookmarks, 
- %   bookmarksnumbered=true, 
- %   bookmarksopen=true, 
-%    bookmarksopenlevel=1,
+\definecolor{darkblue}{rgb}{0,0,.5}
+\definecolor{darkred}{rgb}{.8,0,0}
+
+\usepackage[%
+		pdftex,
+		colorlinks,
+ %  bookmarks, 
+    bookmarksnumbered=true, 
+    bookmarksopen=true, 
+    bookmarksopenlevel=1,
 %    hyperfootnotes=true,
-%		linkcolor=black, %standard red
-%		citecolor=black, %standard green
-%		urlcolor=black, %standard cyan
-%		filecolor=black, %  
+		linkcolor=darkred, %standard red,
+		citecolor=darkred, %standard green
+		urlcolor=darkred, %standard cyan
+		filecolor=darkred, %  
    % menubordercolor={0 1 1},    
    % urlbordercolor={1 0 0}      
  %   hyperfootnotes=true,
@@ -186,12 +189,12 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
  %   pdfpagelayout=OneColumn, 
  %   plainpages=false, 
  %   pdfpagelabels,
-  %  pdfusetitle,
- %   pdfstartpage={1},
- %   pdfstartview={FitV},
+    pdfusetitle,
+    pdfstartpage={1},
+    pdfstartview={FitV},
   %  pdfauthor={},
- %   pdftitle={Bachelorarbeit}  
-%]{hyperref}
+  %  pdftitle={Bachelorarbeit}  
+]{hyperref}
 
 \renewcommand{\footnoterule}{\vfill\rule{7.3cm}{0.5pt}\vspace{1ex}}	
 
@@ -241,16 +244,16 @@ backgroundcolor=\color{white}, % Hintergrundfarbe
 \vspace*{70pt}
 \textsf{\textbf{\Huge{Pflichtenheft zum Studienprojekt}}} \\
 \vspace*{20pt}
-\textsf{\textbf{\large{Verteilter Dateisynchronisationsdienst \vspace*{20pt} Synchrony}}}\\\end{center}
+\textsf{\textbf{\large{Verteilter Dateisynchronisationsdienst \vspace*{20pt} Synchrony}}}\\
+\end{center}
 \vspace*{180pt}
 
-\textsf{\large{Stand: 11.05.2010}}\\
+\textsf{\large{Stand: 23.07.2010}}\\
 \vspace*{20pt}
 \\ 
 
-Teilnehmer: \hspace*{0.5cm}Simon Bauer, Michael Bien, Siegfried Hable,\\
-\hspace*{2.75cm}Benedikt Lippert, Markus Grundl\\
-%\vspace*{6pt}
+Teilnehmer: \hspace*{0.5cm}Simon Bauer, Michael Bien, Markus Grundl, \\
+\hspace*{2.75cm}Siegfried Hable, Benedikt Lippert \\
 
 Betreuer: \hspace*{0.95cm}Prof. Dr. Wolfgang Jürgensen\\
 
@@ -267,9 +270,10 @@ Betreuer: \hspace*{0.95cm}Prof. Dr. Wolfgang Jürgensen\\
 %\pdfbookmark[1]{Kurzzusammenfassung / Abstract}{abstract}
 \thispagestyle{empty}
 \section*{Kurzzusammenfassung}
-Text Text ...
-\section*{Abstract}
-Wenn gewünscht, auch noch eine englische Zusammenfassung...
+Dies ist das Pflichtenheft zum Studienprojekt des Master-Studiengangs SS2010/WS2011 mit dem Titel "Verteilter Dateisynchronisationsdienst".\par
+Dieses Pflichtenheft ist nach dem Gliederungsvorschlag von Prof. Dr. Helmut Balzert (Ruhr-Universität Bochum) aus seinem Buch "Lehrbuch der Softwaretechnik"\footnote{Helmut Balzert - Lehrbuch der Softwaretechnik \url{http://amazon.de/o/ASIN/3827417058/}} strukturiert und gibt eine Übersicht der Anforderungen an der in diesem Studienprojekt zu realisierenden Softwarekomponente.
+%\section*{Abstract}
+%Wenn gewünscht, auch noch eine englische Zusammenfassung...
 
 \newpage
 %\thispagestyle{empty}
@@ -298,201 +302,205 @@ Wenn gewünscht, auch noch eine englische Zusammenfassung...
 %\newpage
 
 \section{Zielbestimmung}
+\textit{Synchrony}  ist eine Software, die es ermöglicht, Verzeichnisse und Dateien zu synchronisieren.
+Die Anwendung ermöglicht Datenbestände zwischen verschiedenen Geräten synchron zu halten.
+\textit{Synchrony} stellt eine benutzerfreundliche Benutzeroberfläche zur Verfügung. Diese dient dazu
+zu synchronsierende Ordner anzugeben und den Synchronisationsdienst zu aktivieren. Ist der Dienst auf
+den jeweiligen Endgeräten aktiv, so läuft der Abgleich der Daten im Hintergrund ab. Die Verzeichnisse 
+werden dabei in beiden Richtungen abgeglichen.
 \subsection{Muss-Kriterien}
-Datei-Synchronisation zwischen zwei Rechner (kein Mount!)
+Die im Folgenden genannten Punkte stellen unabdingbare Produktleistungen dar:
+\begin{itemize}
+\item Der Benutzer kann Dateien zwischen zwei oder mehreren Rechnern synchronisieren. Die Daten werden hierbei repliziert.
+\item Der Benutzer kann den Synchronisationsdienst konfigurieren.
+\item Bei der Installation wird ein Account vergeben, der zur Identifikation eines Nutzers im Netzwerk dient.
+\item Der Benutzer kann den Synchronisationsdienst aktiveren bzw. deaktivieren.
+\item Der Benutzer kann zu die Verzeichnisse, welche er synchronsieren will selbst bestimmen und verändern.
+\item Der Benutzer kann den Status der Synchronisation verfolgen.
+\item Der Benutzer kann wählen, ob die Oberfläche deutsch oder englischsprachig angezeigt wird.
+\item Nach einmaliger Konfiguration ist der Dienst funktions- und synchronisationsbereit.
+\item Die Dateisynchronisation erfolgt auf Odnerebene, d.h. Dateien der Subordner werden ebenfalls
+  synchronsiert
+\end{itemize}
 \subsection{Optionale Kriterien}
-- Server: 'Social Sharing' - Mechanismus\\
-- Anbindung mobiler Clients (Android)\\
-- Anbindung an etablierte Protokolle
+\begin{itemize}
+\item Der Synchronsiationsdienst ist automatisch beim Start des Gerätes aktiv.
+\item Über einen Webserver wird ein ’Social Sharing’ - Mechanismus realisiert.
+\item Eine Anbindung mobiler Clients soll evaluiert werden. (z.B. Android, iPhone)
+\end{itemize}
 \subsection{Zielabgrenzung}
-- Anwendungszweck nicht identisch mit P2P (BitTorrent)
+Der Anwendungszweck ist nicht identisch mit P2P (Torrent), d.h. kein Filesharing-Protokoll, das sich besonders für die schnelle Verteilung großer Datenmengen eignet.
 \newpage
 \section{Produkteinsatz}
 \subsection{Anwendungsbereich}
-Paar Sätze im Prosa, was die SW tun soll.
+Die Softwarekomponente soll Daten jeglicher Art synchron halten und replizieren können, d.h. sie ist auf keinen konkreten Anwendungsbereich limitiert oder auf einen solchen speziell zugeschnitten.\par
+Der Dienst ist jedoch, wie in Abschnitt 2.3 beschrieben wird, als Hintergrunddienst gedacht, um Dateien und Informationen zwischen verschiedenen Speicherlokationen zeitnah synchron zu halten und wird daher nicht als Vertriebskanal von großen Dateien (Stichwort Peer-to-Peer-Filesharing) entworfen.
 \subsection{Zielgruppe}
-Anwender, die Dateien zwischen zwei Geräten synchron halten wollen.\\
-Bsp: Entwickler, Photographen ...
+Prinzipiell ist die Software für jeden Benutzertyp geeignet, der Dateien zwischen mehreren System synchron halten bzw. den Dienst zur Datensicherung verwenden will.\par
+Nachfolgend eine beispielhafte und nicht abgeschlossene Liste möglicher Anwender und Anwendungsszenarien der Softwarekomponente:
+\begin{itemize}
+	\item Software-Entwickler: Dateien wie z.B. zur Entwicklung von Software aus einem Projekt-Workspace werden zeitnah abgeglichen, sodass an einem anderen Arbeitsplatz weiterentwickelt werden kann.
+	\item Photographen: Beispielsweise können an einem Standort A geschossene Photos über eine mobile Internetverbindung mit einer Workstation am Standort B sofort betrachtet und bearbeitet werden. 
+	\item Lehrer/Professoren: Dokumente wie Übungsaufgaben o. Ä. können zwischen Systemen des Büros und des Heimarbeitsplatzes synchron gehalten werden.
+	\item Buchautoren: Skripte, Notizen usw. können zwischen verschiedenen Geräten an verschiedenen Standorten synchronisiert und repliziert werden. 
+\end{itemize}
 \subsection{Betriebsbedingungen}
-- Systemdienst, im Hintergrund aktiv mit der User-Session des Anwenders\\
-- Wartungsfrei\\
-- User hat Steuerungspflicht
+Der Dateisynchronisationsdienst soll i.d.R. im Hintergrund als Benutzerdienst laufen und im selbsstständig aktiv sein. Der Dienst wird daher i.d.R. beim Einloggen des Anwenders automatisch gestartet.\par
+Der Benutzer hat aber auch Möglichkeiten der Steuerung des Dienstes über eine graphische Schnittstelle (GUI), die später im Dokument genauer spezifiziert wird.\par
+Das Ausführen der eigentlichen Funktion des Dienstes bedarf aber keiner Aktion des Benutzers.
+
 \newpage
 \section{Produktumgebung}
-Produktumgebung
 \subsection{Software}
-Software:\\
--allg.: kompatibles Filesystem\\
-- Desktop: \hspace*{2cm} -NW-Anschluss \\-Java 7 RE\\
-- Mobiler Client: \hspace*{2cm} -aktuelles Android-BS mit Unterstützung der SW \\-Nw-Verbindung (wireless)
+\textit{Synchrony}  stellt folgende Anforderungen an das System hinsichtlich softwareseitiger Unterstützung:
+\begin{itemize}
+	\item Java Runtime Environment 7 oder höher\footnote{neue Möglichkeiten der Dateisystem-Programmierschnittstellen sollen genutzt werden.\newline Siehe hierzu die offiziellen Sun-Webnotes: \url{http://java.sun.com/javase/7/webnotes/index.html}}
+	\item ein mit der Dateisystem-API von Java 7 kompatibles Dateisystem
+	\item für die Verwendung der graphischen Schnittstelle (GUI) muss ein kompatibles Betriebssystem bzw. ein kompatibler Window-Manager vorhanden sein
+\end{itemize}
 \subsection{Hardware}
-keine besonderen Anforderungen
+Die Voraussetzungen hinsichtlich der Hardware sind folgendermaßen:
+\begin{itemize}
+	\item stabile und leistungsfähige Netzwerk- bzw. Internetverbindung, je nach Einsatzszenario
+	\item ein ausreichend leistungsfähiges System um Datenkopiervorgänge im Hintergrund durchführen zu können ohne die normale Nutzung zu beeinträchtigen
+\end{itemize}
 \newpage
 \section{Produktfunktionen}
 \subsection{Funktionalitäten}
-Text: Ziel der SW aus USER-Sicht\\
--Was tut es?\\
--Infü über Aktivität im System-Icon
+Grundlegendes Ziel der Anwendung ist es Daten zu synchronisieren. Unter Daten ist
+in diesem Zusammenhang eine permanent, physisch auf einem nicht-fl\"{u}chtigem Datentr\"{a}ger
+gespeicherte, Sammlung von lesbaren Informationen zu verstehen. Im Normallfall sind
+dies Dateien, Verzeichnisse oder ganze Partitionen. Diese k\"{o}nnen auf r\"{a}umlich
+voneinander getrennten Speichermedien abgelegt sein, und m\"{u}ssen auch nicht
+dasselbe Betriebssystem als Grundlage aufweisen.\par
+\textit{Synchrony}  gleicht diese Daten miteinander ab, und bringt diese auf einen einheitlichen Stand. Bei einem nicht
+klar definierten Zustand zweier Datenmengen kann der User manuell eingreifen.\par
+Es besteht die M\"{o}glichkeit sich das laufende Programm als System-Icon in die
+Kontrollleiste des Systems einbetten zu lassen. Das (mit der rechten Maustaste
+aufklappbare) Menue soll unter anderem folgende Eintr\"{a}ge enthalten:
+\begin{itemize}
+\item Beenden der Anwendung
+\item Starten des Dienstes
+\item Stoppen des Dienstes
+\item Einstellungen\footnote{Beispiele: Maximale zu verwendende Bandbreite, Auswahl der zu synchronisierenden Ordner ...}
+\item Statusinfo
+\end{itemize}
+
 \subsection{Konfiguration}
--Konfig-file\\
--Einfache GUI zur konfiguration (Änderungen dann im Konfig-File, damit SW-Neustart überlebt werden + Logeintrag)
-\newpage
+Um bestimmte Einstellungen dauerhaft zu speichern wird eine globale
+Konfigurationsdatei \emph{(z.B. /etc/synchrony/syn.config)} angelegt, die aber bei
+Bedarf von der lokalen Konfiguration \emph{(z.B. ~./.synchrony/syn\_local.config)}
+\"{u}berschrieben wird.\par
+Um die Konfigurationsdateien anzupassen wird ein grafisches Frontend zur Verf\"{u}gung
+gestellt, in dem die Einstellungen abgerufen und modifiziert werden k\"{o}nnen. Dieses
+soll m\"{o}glichst einfach und \"{u}bersichtlich aufgebaut sein, um auch dem
+\glqq Normaluser\grqq\ eine mit möglichst kurzer Einarbeitungszeit bedienbare Schnittstelle anzubieten.
+\newpage
 \section{Produktdaten}
-- Hash-Trees in .synchrony\\
-- Logfile
+Der Dienst benötigt bzw. erzeugt folgende, lokal gespeicherten Daten:
+\begin{itemize}
+    \item Datei Metainformationen
+    \item Konfigurationsdateien
+    \item Logdateien 
+\end{itemize}
+Die Datei-Metainformationen bestehen größtenteils aus Hashwerten über Teile und/oder die gesamte Datei.
+Die Hashwerte dienen als eindeutige Signatur der Datei im Netzwerk und gleichzeitig als Prüfsummen bei der
+Übertragung.\par
+Die Systemaktivität wird zwar in Form von Logfiles protokolliert, allerdings kann dadurch
+bei Standardeinstellungen die Kommunikation nicht nachvollzogen werden. Die Logfiles dienen
+primär zur Protokollierung evtl. auftretener Fehler.
 \newpage
 \section{Produktleistungen}
-- minimale Zugriffe auf HDD (Systemlast gering halten)\\
-- bei Versionskonflikten: - kein Datenverlust\\-Möglichkeit zur interaktiven Konfliktlösung
+Die Software verspricht
+\begin{itemize}
+    \item verlustfreie Dateisynchronisation,
+    \item ökonomischen Festplattenzugriff (um Systemgesamtleistung nicht zu beinflussen),
+    \item und das Erkennen und Auflösen von Versionskonflikten.
+\end{itemize}
 \newpage
 \section{Benutzeroberfläche}
-- Systemtray: startet Konfigfenster - start service - stop service - getStatus();\\
--Systemnotifications (BS-abhängig), aber optional
-\newpage
-\section{Qualitätsbestimmungen}
-Matrix siehe Bsp (URL in eMail)
-\newpage
-\section{Testfälle}
-TEst driven Development; Junit-Tests -> Destdescription
-\newpage
-\section{Entwicklungsumgebung}
-Siehe Bsp für 1. Satz; ansonsten ist nur JDK 7 und Maven zu nennen, erklären
-\newpage
-\section{Ergänzungen}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-\newpage
-\section{Glossar}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-
-\newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-%\newpage
-\listoffigures
-
-\newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-%\newpage
-\listoftables
-
-%\newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-%\newpage
-%\lstlistoflistings
-
-\newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-%\setcounter{secnumdepth}{1} 
-%Anhang!
-\begin{appendix}
-\pagenumbering{Roman}	
-
-%\setcounter{figure}{0}
-
-
-\section{Anhang: Beispiel AES-Verschlüsselung mit der Sun JCE}
-AES-Verschlüsselung mit der Sun JCE
-Einkommentieren !
-%\lstinputlisting[captionpos=b, caption=JCE AES Example]{listings/appendix/1_jcaAesExample.java}
-%
-%Beispiel HMAC-MD5 aus der Sun JCE
-%\lstinputlisting*[captionpos=b, caption=JCE HMAC-MD5 Example]{listings/0_hmacmd5_example.java}
-
-%Listings können, anders als Grafiken und Tabellen nicht
-%per * aus dem Listingsverzeichnis herausgelassen werden!
-%Falls ein Listing (z. B. im Anhang) nicht in das Verzeichnis
-%soll muss getrickst werden: 
-%	1. Auskommentieren der Listings im Anhang -> pro Listing ein \newpage,
-%	dass die Seitenzahl des Anhangs gleich bleibt
-% 2. Setzen, sodass nur noch Listings des eigentlichen Dokuments im VZ
-%	WICHTIG: PDF jetzt wegspeichern!
-% 3. Änderungen von 1. rückgängig machen, alles setzen, sodass Anhang wieder passt
-% Das eigentliche, resultieren Dokument setzt sich jetzt aus dem PDF von 2.
-% (inkl. Listingsverzeichnis) + Anhang von 3. zusammen
-% Besserer Weg?!?!?
-
-\newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-
-\section{Anhang: Abbildung JMX-Konsole}
-\begin{figure}[h]					
-\centering
-Einkommentieren!
-%\includegraphics[scale=0.75]{pics/7_jmx_console.png}		% Grafikeinbindung mit Dateiname und Groessenangabe			% ([width=], [height=], [scale=1.00]...)
-\caption{Screenshot der JMX-Weboberfläche}		% Bildbeschriftung
-\label{fig:Fabrikmethode}							% Sprungmarke fuer Verweise
-\end{figure} 	\vspace{-12pt}
-
-\newpage
-%\thispagestyle{empty}
-%\mbox{}
-%\newpage
-
-
-
-\newpage
-\section{Anhang: verschiedene LaTeX-Tests}
-%Fussnoten-Tests:
-%\footnote{\citep[vgl. ][S. 1]{Schmeh2009}}
-%\footnote{\citep[vgl. ][S. 23]{Schmeh2009}}
-%\footnote{\citep[vgl. ][S. 1-100]{Schneier1996}}
-%\footnote{\citep[vgl. ][S. 1]{Monson-Haefel2009}}
-%\citep[vgl. ][S. 1]{Langner2006}
-%\citep[vgl. ][S. 1]{Lipp2000}
-%\citep[vgl. ][S. 1]{Backschat2007}
-%\footnote{\citep[vgl. ][]{Schneier1996}}
-
-%nocite bewirkt,d ass das ganze bib geschrieben wird, auch wenn noch keine cites (referenz) im text auf jedes element existieren
-\nocite{*}
-
-\newpage
-Folgendes Bild ist im Abbildungsverzeichnis:
-\begin{figure}[h]							
-\centering 
-Einkommentieren!
-%\includegraphics[scale=1.0]{pics/giesecke_devrient_ger.png}		% Grafikeinbindung mit Dateiname und Groessenangabe												% ([width=], [height=], [scale=1.00]...)
-\caption{Logo von Giesecke \& Devrient}									% Bildbeschriftung
-\label{fig:LogoGD}												% Sprungmarke fuer Verweise
+Das System benötigt im Regelfall keinerlei Benutzerinteraktion. Zur Konfiguration
+wird ein ausblendbares Tray-Icon angeboten, über das der Benutzer auch den Dienst
+temporär pausieren oder beenden kann.
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{img/tray.png}
+    \caption{Tray-Icon}
+\end{figure}
+\\
+Der Dienst kann den Benutzer über systemabhängige Mechanismen über Ereignisse benachrichtigen.
+Ein Ereignis ist beispielweise das Auffinden einer neuen Datei auf einem entfernten Rechner
+oder erkannte Versionskonflikte. Die Häufigkeit der Benachrichtigungen kann angepasst werden.
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{img/notification.png}
+    \caption{Benachrichtigung}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{img/options.png}
+    \caption{Konfiguration des Dienstes}
 \end{figure}
 
-Folgendes Bild ist NICHT im Abbildungsverzeichnis: \\ %einfach  den figure-mantel weglassen
-\begin{center}
-Einkommentieren!
-%\includegraphics*[scale=1.0]{pics/giesecke_devrient_ger.png}	
-\end{center}
+\clearpage
 
-Tabellenobjekt: hier ist ein Bild in einer Tabelle mit einer Spalte und einer Zelle:
-So können z.B. Tabellen, die als Bilddatei vorliegen als Tabelle betitelt und auch ins Tabellen-VZ aufgenommen werden.
+\newpage
+\section{Qualitätsbestimmungen}
 \begin{table}[h]							
-\centering 
-Einkommentieren!
-%\includegraphics[scale=1.0]{pics/giesecke_devrient_ger.png}		% Grafikeinbindung mit Dateiname und Groessenangabe													% ([width=], [height=], [scale=1.00]...)
-\caption{Logo von Giesecke \& Devrient als Tabelle deklariert}									% Bildbeschriftung
-\label{fig:LogoGD}												% Sprungmarke fuer Verweise
+\begin{center}
+ \begin{tabular}{l|c|c|c|c}
+  ~ & sehr wichtig & wichtig & weniger wichtig & unwichtig\\
+  \hline \hline
+  Robustheit~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \hline
+  Zuverlässigkeit~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \hline
+  Korrektheit~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \hline
+  Benutzungsfreundlichkeit~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \hline
+  Effizienz~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \hline
+  Portierbarkeit~ &  ~ ~ ~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ \\
+  \hline
+  Kompatibilität~ &  ~ ~ ~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ \\
+ \end{tabular}
+\end{center}
+\caption{Matrix der Qualitätsanforderungen}									% Bildbeschriftung
+\label{fig:Qualitaet}												% Sprungmarke fuer Verweise
 \end{table}
+
+\newpage
+\section{Testfälle}
+Die Testfälle werden jeweils vor der Programmierung einer Funktion entworfen und implementiert. Das Prinzip dahinter ist das sogenannte
+Test Driven Development, welches die Tests als Basis der Programmierung festlegt. Diese Vorgehensweise setzt von Anfang an die Qualität
+der Software in den Mittelpunkt und gewährleistet somit einen hohen Qualitätsstandard. Dadurch sind die Tests automatisch in den 
+Entwicklungsprozess mit einbezogen und einzelne Testfälle werden nicht vergessen. Die Tests werden mit sogenannten JUnit-Tests realisiert.
 
+\newpage
+\section{Entwicklungsumgebung}
+\subsection{Software}
+Für die Entwicklung des Synchronisations-Tools \textit{Synchrony} wird die Entwicklungsumgebung NetBeans (Version 6.8) verwendet.
+\textit{Synchrony} wird in der Programmiersprache Java entwickelt - dazu wird auf den Entwicklungsrechnern JDK 7 installiert.
+Das Release von JDK 7 ist voraussichtlich im dritten Quartal 2010, wird aber aufgrund der neu hinzugekommenen File-API bereits für
+dieses Projekt verwendet. Datei-Operationen sind ein wesentlicher Bestandteil für synchrony und diese sind in Java 7 sehr effizient
+implementiert.
 
+Das Projektverwaltungswerkzeug Maven 2 (Version 2.2.1) wird installiert und ist zugleich als Plugin in NetBeans (ab Version 6.7) automatisch
+integriert. Maven wird zum Erstellen eines Software-Projektes verwendet und bietet eine Vielzahl an Plugins für z. B. die Verwaltung eines
+Projektes oder die Durchführung des Buildzyklus. Außerdem bietet Maven ein sehr komfortables Management der benötigten Bibliotheken, welche
+aus öffentlichen und privaten Repositories bezogen werden können, d. h. das manuelle Suchen der Bibliotheken entfällt somit.
 
+GitHub (Version 1.6.3.3) wird als Online-Versionskontrollsystem für die Verwaltung von Quellcode eingesetzt. Damit lässt sich die Zusammenarbeit im
+Team besser organisieren. GitHub ist eine OpenSource-Software, welche der GNU General Public License unterliegt.
 
-\end{appendix}
-%\end{anhang}
+\subsection{Hardware}
+Die Entwicklung erfolgt auf unterschiedlichen Rechnern. Als Entwickler-Betriebssystem werden verschiedene Linuxdistributionen verwendet. Vorrangig wird die Distribution Ubuntu in ihren Releases 9.04, 9.10 und 10.04 eingesetzt..
+Die Rechner-Hardware spielt keine entscheidende Rolle, es muss lediglich die Java Virtual Machine darauf laufen können. 
 
-%\newpage
-%\thispagestyle{empty}
-%\mbox{}
+\newpage
+\listoffigures
+
+\listoftables
 
 \end{document}
