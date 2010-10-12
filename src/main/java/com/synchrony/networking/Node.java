@@ -4,6 +4,7 @@
 
 package com.synchrony.networking;
 
+import java.net.InetAddress;
 import java.util.Objects;
 
 /**
@@ -17,11 +18,13 @@ public class Node {
     private byte[] sessionKeyReceive = null;
 
     private  byte[] sessionKeySend = null;
+    
+    private final InetAddress address;
 
 
-    Node(String hostAddress) {
+    Node(String hostAddress, InetAddress address) {
         this.name = hostAddress;
-
+        this.address = address;
     }
 
     public void setSessionKeyReceive(byte[] key) {
@@ -32,9 +35,13 @@ public class Node {
         this.sessionKeySend = key;
     }
 
+    public InetAddress getAddress() {
+        return address;
+    }
+
     @Override
     public String toString() {
-        return getClass().getName() + "{" + name + "}";
+        return getClass().getSimpleName() + "{" + name+"["+address.getHostAddress()+"]" + "}";
     }
 
 

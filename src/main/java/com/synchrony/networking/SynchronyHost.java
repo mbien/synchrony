@@ -122,7 +122,7 @@ public class SynchronyHost {
                     buffer.get(bytes);
 
                     synchronized(knownHosts) {
-                        Node node = new Node(senderAddress.getHostAddress()+" - "+hashCode());
+                        Node node = new Node(senderAddress.getHostName()+"_hash"+hashCode(), senderAddress);
                         Long old = knownHosts.put(node, System.currentTimeMillis());
                         if(old != null) {
                             // new host discovered
