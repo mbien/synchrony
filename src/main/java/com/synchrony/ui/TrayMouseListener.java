@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 /*
- * Mouse-Listener für das Icon in Symbolleiste
+ * Mouse-Listener f_r das Icon in Symbolleiste
  */
 public class TrayMouseListener implements MouseListener {
 

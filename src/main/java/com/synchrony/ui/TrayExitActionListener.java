@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /*
- * Listener-Klasse für das PopUpMenü-Item "exitItem" (siehe Systemtray.java)
+ * Listener-Klasse f_r das PopUpMen_-Item "exitItem" (siehe Systemtray.java)
  */
 public class TrayExitActionListener implements ActionListener {
 
@@ -22,7 +22,7 @@ public class TrayExitActionListener implements ActionListener {
         this.systemtray = systemtray;
     }
 
-    //wird ausgeführt wenn das exitItem des PopUpMenüs geklickt wird
+    //wird ausgef_hrt wenn das exitItem des PopUpMen_s geklickt wird
     public void actionPerformed(ActionEvent e) {
 
         System.out.println("Die Applikation wird geschlossen...");

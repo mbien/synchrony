@@ -9,7 +9,7 @@ import java.awt.*;
 /*
  * In dieser Klasse wird auf den Systemtray zugegriffen.
  * Dazu werden die Klassen SystemTray und TrayIcon aus dem Package java.awt verwendet.
- * Diese Klassen ermöglichen es Graphik, Popupmenüs und andere Funktionen auf den Systemtray anzuwenden.
+ * Diese Klassen erm_glichen es Graphik, Popupmen_s und andere Funktionen auf den Systemtray anzuwenden.
  * Jede Java-Anwendung hat eine einzige Systemtray-Instanz. Diese wird nicht selbst erstellt, sondern
  * die Applikation benutzt den Systemtray den sie mit der Methode getSystemTray() bekommt.
  */
@@ -21,8 +21,8 @@ public class Systemtray {
     // Konstruktor
     public Systemtray() {
 
-        // Prüfen ob der Zugriff mit der Methode SystemTray.getSystemTray()
-        // unterstützt wird
+        // Pr_fen ob der Zugriff mit der Methode SystemTray.getSystemTray()
+        // unterst_tzt wird
         if (SystemTray.isSupported()) {
 
             // Zugriff auf den Systemtray
@@ -70,11 +70,11 @@ public class Systemtray {
             try {
                 tray.add(trayIcon);
             } catch (AWTException e) {
-                System.err.println("TrayIcon kann nicht hinzugefügt werden");
+                System.err.println("TrayIcon kann nicht hinzugef_gt werden");
             }
 
         } else {
-            System.err.println("Systemtray wird derzeit nicht unterstützt");
+            System.err.println("Systemtray wird derzeit nicht unterst_tzt");
         }
     }
 
