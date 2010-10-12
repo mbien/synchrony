@@ -65,11 +65,11 @@ public class FileChooser extends javax.swing.JDialog {
 
         //Auswahl im Textfeld setzen
         System.out.println(identifier);
-        if (identifier.equals("jbutton2")) {
-            startupFrame.getjTextField3().setText(choice.toString());
-        }
+//        if (identifier.equals("jbutton2")) {
+//            startupFrame.getjTextField3().setText(choice.toString());
+//        }
         if (identifier.equals("jbutton5")) {
-            startupFrame.getjTextField4().setText(choice.toString());
+            startupFrame.getPathTextField().setText(choice.toString());
         }
         System.out.println(choice);
     }
