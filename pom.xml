@@ -20,6 +20,14 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>java.net2</id>
+            <url>http://download.java.net/maven/2/</url>
+        </repository>
+    </repositories>
+    
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -42,6 +50,12 @@
             <groupId>com.googlecode.sli4j</groupId>
             <artifactId>sli4j-slf4j-log4j</artifactId>
             <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>3.2.7</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 </project>
