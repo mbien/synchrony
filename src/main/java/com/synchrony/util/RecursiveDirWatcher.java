@@ -30,12 +30,12 @@ public class RecursiveDirWatcher {
 
     private final Path rootDir;
 
-    private DirEventListener listener;
+    private FSEventListener listener;
 
     private Filter filter;
 
 
-    public RecursiveDirWatcher(Path dir, DirEventListener listener, Filter filter) throws IOException {
+    public RecursiveDirWatcher(Path dir, FSEventListener listener, Filter filter) throws IOException {
 
         this.watcher = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<>();
@@ -126,7 +126,7 @@ public class RecursiveDirWatcher {
 
                 // TODO rescan
                 if (kind == OVERFLOW) {
-                    log.warning("internal even queue OVERFLOW");
+                    log.warning("internal event queue OVERFLOW");
                     continue;
                 }
 
@@ -174,7 +174,7 @@ public class RecursiveDirWatcher {
     }
 
     @SuppressWarnings("unchecked")
-    private final <T> WatchEvent<T> cast(WatchEvent<?> event) {
+    private <T> WatchEvent<T> cast(WatchEvent<?> event) {
         return (WatchEvent<T>)event;
     }
 

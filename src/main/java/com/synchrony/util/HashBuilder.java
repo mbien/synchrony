@@ -11,9 +11,6 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.Provider;
-import java.security.Provider.Service;
-import java.security.Security;
 import java.util.Arrays;
 
 import java.util.Set;
@@ -23,6 +20,7 @@ public class HashBuilder {
 
     public final String HASH_ALGORITHM;
     final FileAttribute<Set<PosixFilePermission>> attr;
+    private final int DIGEST_LENGHT;
 
     public HashBuilder() throws NoSuchAlgorithmException {
         this("SHA");
@@ -33,6 +31,8 @@ public class HashBuilder {
 //            throw new NoSuchAlgorithmException("Requested algorithm not available. Requested was: "+algorithm);
 //        }
         HASH_ALGORITHM = algorithm;
+
+        DIGEST_LENGHT = MessageDigest.getInstance(HASH_ALGORITHM).getDigestLength();
         
         attr = PosixFilePermissions.asFileAttribute(
                 PosixFilePermissions.fromString("rwxr-x---")
@@ -89,7 +89,7 @@ public class HashBuilder {
         return msgDigest.digest();
     }
 
-    public void storeHashFile(Path file, Path checkSumFile) throws IOException {
+    public byte[] storeHashFile(Path file, Path checkSumFile) throws IOException {
 
         byte[] hash = buildChecksum(file);
 
@@ -106,6 +106,18 @@ public class HashBuilder {
             throw ex;
         }
         os.close();
+        return hash;
+    }
+
+    public byte[] readHashFile(Path hashFile) throws IOException {
+        byte[] hash = new byte[DIGEST_LENGHT];
+        InputStream is = hashFile.newInputStream(READ);
+        try{
+            is.read(hash);
+        }finally{
+            is.close();
+        }
+        return hash;
     }
     
 }

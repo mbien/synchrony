@@ -2,7 +2,7 @@ package com.synchrony.core;
 
 import com.synchrony.util.RecursiveDirWatcher;
 import com.synchrony.util.HashBuilder;
-import com.synchrony.util.DirEventListener;
+import com.synchrony.util.FSEventListener;
 import com.synchrony.util.IOUtils;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.Attributes;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
 import java.util.Deque;
@@ -23,27 +22,31 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.logging.Level.*;
 import static java.nio.file.FileVisitResult.*;
-import static java.nio.file.LinkOption.*;
+import static com.synchrony.util.IOUtils.*;
 
 /**
  *
  * @author Michael Bien
  */
-public class DirHasher implements DirEventListener {
+public class DirHasher implements FSEventListener {
 
     private static final int MAX_DELETE_BUFFER_SIZE = 512;
-    private static final String CHECKSUM_FOLDER = ".equilibrium";
+    private static final String CHECKSUM_FOLDER = ".hash";
 
     private final Deque<Path> recentlyDeleted;
     private final HashBuilder hashBuilder;
     private final Path rootDir;
     
-    private final Logger log = Logger.getLogger(DirHasher.class.getName());
+    private static final Logger log = Logger.getLogger(DirHasher.class.getName());
 
     private RecursiveDirWatcher watcher;
 
+    private final FSFolder root;
+
     public DirHasher(Path dir) throws IOException {
 
+        root = new FSFolder(dir);
+        
         recentlyDeleted = new LinkedList<>();
         try {
             hashBuilder = new HashBuilder();
@@ -87,7 +90,8 @@ public class DirHasher implements DirEventListener {
 
                 Path dest = resolveHashFileDestination(file);
                 try {
-                    hashIfNeeded(file, dest);
+                    byte[] hash = hashIfNeeded(file, dest);
+                    root.insert(new FSFile(file, hash, attrs));
                 } catch (IOException ex) {
                     log.log(SEVERE, "hash file creation was not successful", ex);
                 }
@@ -97,6 +101,8 @@ public class DirHasher implements DirEventListener {
         };
 
         Files.walkFileTree(rootDir, walker);
+
+        System.out.println(root);
     }
 
     public void processEvents() throws IOException {
@@ -104,17 +110,21 @@ public class DirHasher implements DirEventListener {
     }
 
     public void entryDeleted(Path path) {
-        if(recentlyDeleted.size() == MAX_DELETE_BUFFER_SIZE)
+        if(recentlyDeleted.size() == MAX_DELETE_BUFFER_SIZE) {
             recentlyDeleted.pollLast();
+        }
         recentlyDeleted.addFirst(path);
+        root.remove(path);
+
+        System.out.println(root);
     }
 
-    public void entryCreated(Path dir, Path entry) {
+    public void entryCreated(Path dir, Path file) {
 
         try {
-            if(!entry.endsWith(Paths.get(CHECKSUM_FOLDER))) {
+            if(!file.endsWith(Paths.get(CHECKSUM_FOLDER))) {
 
-                if (Attributes.readBasicFileAttributes(entry, NOFOLLOW_LINKS).isDirectory()) {
+                if (isDirectory(file)) {
 
                     System.out.println("folder moved");
 
@@ -136,15 +146,6 @@ public class DirHasher implements DirEventListener {
                             return CONTINUE;
                         }
 
-                        @Override
-                        public FileVisitResult postVisitDirectory(Path dir, IOException ex) {
-                            try {
-                                dir.delete();
-                            } catch (IOException ex1) {
-                            }
-                            return CONTINUE;
-                        }
-
                     };
 
                     Files.walkFileTree(dir, patchUpdater);
@@ -152,10 +153,11 @@ public class DirHasher implements DirEventListener {
                     recentlyDeleted.pollFirst();
 
                 } else {
-                    updateHashFile(entry);
+                    updateHashFile(file);
                 }
 
             }
+            System.out.println(root);
         } catch (IOException ex) {
             Logger.getLogger(DirHasher.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -163,6 +165,9 @@ public class DirHasher implements DirEventListener {
 
     public void entryModified(Path path) {
         System.out.println("modified: "+path);
+        updateHashFile(path);
+
+        System.out.println(root);
     }
 
     private void updateHashFile(final Path child) {
@@ -181,7 +186,7 @@ public class DirHasher implements DirEventListener {
 
                 boolean isDir = false;
                 try{
-                    isDir = Attributes.readBasicFileAttributes(oldHashDest, NOFOLLOW_LINKS).isDirectory();
+                    isDir = isDirectory(oldHashDest);
                 }catch(IOException ex) {
                     isDir = false;
                 }
@@ -192,11 +197,11 @@ public class DirHasher implements DirEventListener {
                     
                     SimpleFileVisitor<Path> hashMatcher = new SimpleFileVisitor<Path>() {
                         @Override
-                        public FileVisitResult visitFile(Path checkSumFile, BasicFileAttributes attrs) {
+                        public FileVisitResult visitFile(Path checksumFile, BasicFileAttributes attrs) {
                             try {
-                                if (hashBuilder.fileEqualsHash(child, checkSumFile)) {
+                                if (hashBuilder.fileEqualsHash(child, checksumFile)) {
                                     log.info("file was moved: "+ child);
-                                    checkSumFile.delete();
+                                    checksumFile.delete();
                                     return TERMINATE;
                                 }
                             } catch (IOException ex) {
@@ -212,12 +217,18 @@ public class DirHasher implements DirEventListener {
                     if(exception[0] != null)
                         throw exception[0];
 
-                    hashIfNeeded(child, newHashDest);
+                    byte[] hash = hashIfNeeded(child, newHashDest);
+                    FSNode fsnode = root.get(child);
+                    if(fsnode == null) {
+                        root.insert(new FSFile(child, hash, null));
+                    }else{
+                        ((FSFile)fsnode).setHash(hash);
+                    }
                     break;
 
                 }else{
 
-                    Path oldHashFile = Paths.get(oldHashDest + "." + hashBuilder.HASH_ALGORITHM);
+                    Path oldHashFile = getHashFileName(oldHashDest);
 //                    byte[] hash = hashBuilder.buildChecksum(child);
 
                     if(hashBuilder.fileEqualsHash(child, oldHashFile)) {
@@ -225,8 +236,8 @@ public class DirHasher implements DirEventListener {
                         log.info("file move confirmed: "+deleted+" -> "+child);
 
                         try {
-                            Path newCheckSumFile = Paths.get(newHashDest + "." + hashBuilder.HASH_ALGORITHM);
-                            oldHashFile.moveTo(newCheckSumFile, StandardCopyOption.REPLACE_EXISTING);
+                            Path newChecksumFile = getHashFileName(newHashDest);
+                            oldHashFile.moveTo(newChecksumFile, StandardCopyOption.REPLACE_EXISTING);
                         } catch (NoSuchFileException ex) {
                             log.log(WARNING, "can't move hash file: "+oldHashFile);
                             hashBuilder.storeHashFile(child, newHashDest);
@@ -238,8 +249,14 @@ public class DirHasher implements DirEventListener {
                     }
                 }
             }
-
-            hashIfNeeded(child, newHashDest);
+            
+            byte[] hash = hashIfNeeded(child, newHashDest);
+            FSNode fsnode = root.get(child);
+            if(fsnode == null) {
+                root.insert(new FSFile(child, hash, null));
+            }else{
+                ((FSFile)fsnode).setHash(hash);
+            }
 
         } catch (IOException ex) {
             log.log(SEVERE, "exception while updating hash file", ex);
@@ -247,15 +264,18 @@ public class DirHasher implements DirEventListener {
         }
     }
 
-    private void hashIfNeeded(Path file, Path dest) throws IOException {
+    private byte[] hashIfNeeded(Path file, Path dest) throws IOException {
 
-        Path hashFile = Paths.get(dest + "." + hashBuilder.HASH_ALGORITHM);
+        Path hashFile = getHashFileName(dest);
         
         if(hashFile.exists()) {
-            if(IOUtils.compareModificationTimes(file, hashFile) > 0)
-                hashBuilder.storeHashFile(file, dest);
+            if(IOUtils.compareModificationTimes(file, hashFile) > 0) {
+                return hashBuilder.storeHashFile(file, dest);
+            }else{
+                return hashBuilder.readHashFile(hashFile);
+            }
         }else{
-            hashBuilder.storeHashFile(file, dest);
+            return hashBuilder.storeHashFile(file, dest);
         }
     }
 
@@ -276,7 +296,7 @@ public class DirHasher implements DirEventListener {
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                Path checksumFile = Paths.get(resolveHashFileDestination(file) +"." + hashBuilder.HASH_ALGORITHM);
+                Path checksumFile = getHashFileName(resolveHashFileDestination(file));
 
                 if(checksumFile.notExists()) {
                     log.warning("checksum for "+file+" does not exist");
@@ -299,6 +319,9 @@ public class DirHasher implements DirEventListener {
         return rootDir.resolve(CHECKSUM_FOLDER).resolve(dest);
     }
 
+    private Path getHashFileName(Path dest) {
+        return Paths.get(dest + "." + hashBuilder.HASH_ALGORITHM);
+    }
 
     // for manual testing
     public static void main(String[] args) throws IOException {

@@ -36,7 +36,7 @@ public class IOUtils {
                     try {
                         path.delete();
                     } catch (IOException ex) {
-                        Logger.getLogger(RecursiveDirWatcher.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(IOUtils.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 return FileVisitResult.CONTINUE;
@@ -47,7 +47,7 @@ public class IOUtils {
                 try {
                     file.delete();
                 } catch (IOException ex) {
-                    Logger.getLogger(RecursiveDirWatcher.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(IOUtils.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 return FileVisitResult.CONTINUE;
             }
@@ -60,8 +60,8 @@ public class IOUtils {
      */
     public static int compareCreationTimes(Path file1, Path file2) throws IOException {
 
-        FileTime time1 = Attributes.readBasicFileAttributes(file1, LinkOption.NOFOLLOW_LINKS).creationTime();
-        FileTime time2 = Attributes.readBasicFileAttributes(file2, LinkOption.NOFOLLOW_LINKS).creationTime();
+        FileTime time1 = readBasicAtributes(file1).creationTime();
+        FileTime time2 = readBasicAtributes(file2).creationTime();
 
         return time1.compareTo(time2);
     }
@@ -71,8 +71,8 @@ public class IOUtils {
      */
     public static int compareModificationTimes(Path file1, Path file2) throws IOException {
 
-        FileTime time1 = Attributes.readBasicFileAttributes(file1, LinkOption.NOFOLLOW_LINKS).lastModifiedTime();
-        FileTime time2 = Attributes.readBasicFileAttributes(file2, LinkOption.NOFOLLOW_LINKS).lastModifiedTime();
+        FileTime time1 = readBasicAtributes(file1).lastModifiedTime();
+        FileTime time2 = readBasicAtributes(file2).lastModifiedTime();
 
         return time1.compareTo(time2);
     }
@@ -82,11 +82,18 @@ public class IOUtils {
      */
     public static int compareAccessTimes(Path file1, Path file2) throws IOException {
 
-        FileTime time1 = Attributes.readBasicFileAttributes(file1, LinkOption.NOFOLLOW_LINKS).lastAccessTime();
-        FileTime time2 = Attributes.readBasicFileAttributes(file2, LinkOption.NOFOLLOW_LINKS).lastAccessTime();
+        FileTime time1 = readBasicAtributes(file1).lastAccessTime();
+        FileTime time2 = readBasicAtributes(file2).lastAccessTime();
 
         return time1.compareTo(time2);
     }
 
+    public static BasicFileAttributes readBasicAtributes(Path entry) throws IOException {
+        return Attributes.readBasicFileAttributes(entry, LinkOption.NOFOLLOW_LINKS);
+    }
+
+    public static boolean isDirectory(Path entry) throws IOException {
+        return readBasicAtributes(entry).isDirectory();
+    }
 
 }
