@@ -11,6 +11,7 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.Attributes;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -58,8 +59,9 @@ public class RecursiveDirWatcher {
     private void watchFolder(Path start) throws IOException {
 
         SimpleFileVisitor<Path> walker = new SimpleFileVisitor<Path>() {
+
             @Override
-            public FileVisitResult preVisitDirectory(Path dir) {
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 
                 if(!filter.filter(dir))
                     return SKIP_SUBTREE;

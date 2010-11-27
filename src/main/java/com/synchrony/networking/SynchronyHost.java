@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.synchrony.networking;
 
 import com.synchrony.config.Config;
@@ -101,7 +97,7 @@ public class SynchronyHost {
         ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder());
 
         while (true) {
-
+            
             AsynchronousDatagramChannel channel = null;
             try{
                 channel = AsynchronousDatagramChannel.open(StandardProtocolFamily.INET, null);

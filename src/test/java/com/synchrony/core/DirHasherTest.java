@@ -1,6 +1,5 @@
 package com.synchrony.core;
 
-import com.synchrony.core.DirHasher;
 import com.synchrony.util.IOUtils;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -154,9 +153,9 @@ public class DirHasherTest {
 
     private static void createFile(Path file, int size) throws IOException {
         Files.createDirectories(file.getParent(), attribs);
-        OutputStream os = file.newOutputStream(StandardOpenOption.CREATE);
-        writeRandomn(os, size);
-        os.close();
+        try (OutputStream os = file.newOutputStream(StandardOpenOption.CREATE)) {
+            writeRandomn(os, size);
+        }
     }
 
 
@@ -167,7 +166,7 @@ public class DirHasherTest {
         os.write(bytes);
     }
 
-    private void check() {
+    private void check() throws IOException {
         System.out.print("checking...");
         assertTrue(dirWatcher.checkDirIntegrity(root));
         System.out.println("done");

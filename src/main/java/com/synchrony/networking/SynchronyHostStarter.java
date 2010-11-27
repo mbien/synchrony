@@ -56,6 +56,7 @@ public class SynchronyHostStarter {
         SynchronyHost host = new SynchronyHost(config, listener);
 
         host.startHost();
+        LOG.info("started");
         
     }
         

@@ -71,7 +71,7 @@ public class DirHasher implements FSEventListener {
         watcher.init();
     }
 
-    private void initialHashing() {
+    private void initialHashing() throws IOException {
 
         log.info("rebuilding hash tree");
 
@@ -79,7 +79,7 @@ public class DirHasher implements FSEventListener {
         SimpleFileVisitor<Path> walker = new SimpleFileVisitor<Path>() {
 
             @Override
-            public FileVisitResult preVisitDirectory(Path dir) {
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 if(dir.endsWith(Paths.get(CHECKSUM_FOLDER)))
                     return SKIP_SUBTREE;
                 return CONTINUE;
@@ -132,7 +132,7 @@ public class DirHasher implements FSEventListener {
                     SimpleFileVisitor<Path> patchUpdater = new SimpleFileVisitor<Path>() {
 
                         @Override
-                        public FileVisitResult preVisitDirectory(Path dir) {
+                        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                             if(dir.getName().equals(Paths.get(CHECKSUM_FOLDER))) {
                                 return SKIP_SUBTREE;
                             }else{
@@ -260,7 +260,11 @@ public class DirHasher implements FSEventListener {
 
         } catch (IOException ex) {
             log.log(SEVERE, "exception while updating hash file", ex);
-            initialHashing();
+            try {
+                initialHashing();
+            } catch (IOException ex1) {
+                log.log(SEVERE, "exception while recovering hash tree.", ex1);
+            }
         }
     }
 
@@ -279,14 +283,14 @@ public class DirHasher implements FSEventListener {
         }
     }
 
-    public boolean checkDirIntegrity(Path dir) {
+    public boolean checkDirIntegrity(Path dir) throws IOException {
 
         final boolean[] result = new boolean[] {true};
 
         SimpleFileVisitor<Path> checker = new SimpleFileVisitor<Path>() {
-            
+
             @Override
-            public FileVisitResult preVisitDirectory(Path dir) {
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 if(dir.getName().equals(Paths.get(CHECKSUM_FOLDER))) {
                     return SKIP_SUBTREE;
                 }else{

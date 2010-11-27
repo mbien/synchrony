@@ -18,15 +18,15 @@ import java.util.logging.Logger;
  */
 public class IOUtils {
 
-    public static void deleteDir(Path dir) {
+    public static void deleteDir(Path dir) throws IOException {
         deleteDir(dir, true);
     }
     
-    public static void deleteFilesInDir(Path dir) {
+    public static void deleteFilesInDir(Path dir) throws IOException {
         deleteDir(dir, false);
     }
 
-    private static void deleteDir(final Path dir, final boolean deleteDir) {
+    private static void deleteDir(final Path dir, final boolean deleteDir) throws IOException {
 
         Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
 
