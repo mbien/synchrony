@@ -63,7 +63,27 @@ public class FSTest {
         assertTrue(((FSFolder)root.childs.get(Paths.get("folder1"))).childs.containsKey(Paths.get("subfolder11")));
         assertTrue(((FSFolder)root.childs.get(Paths.get("folder1"))).childs.containsKey(Paths.get("subfolder12")));
         assertTrue(((FSFolder)root.childs.get(Paths.get("folder2"))).childs.containsKey(Paths.get("file2")));
-
+        
+        //remove file
+        FSNode removed = root.remove(file1.getPath());
+        assertEquals(file1, removed);
+        assertNull(root.get(file1.getPath()));
+        assertFalse(root.childs.containsKey(Paths.get("file1")));
+        
+        //remove folder1
+        removed = root.remove(folder1.getPath());
+        assertEquals(folder1, removed);
+        assertNull(root.get(folder1.getPath()));
+        assertFalse(root.childs.containsKey(Paths.get("folder1")));
+        System.out.println(root);
+        
+        //remove folder2
+        removed = root.remove(folder2.getPath());
+        assertEquals(folder2, removed);
+        assertNull(root.get(folder2.getPath()));
+        assertFalse(root.childs.containsKey(Paths.get("folder2")));
+        System.out.println(root);
+        
 
     }
 

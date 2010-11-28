@@ -1,4 +1,4 @@
-package com.synchrony.prototype;
+package com.synchrony.config;
 
 import com.synchrony.config.Config;
 import java.io.IOException;

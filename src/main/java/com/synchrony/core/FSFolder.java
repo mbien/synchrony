@@ -51,25 +51,31 @@ public class FSFolder extends FSNode {
     FSNode get(Path node) {
         Path relative = path.relativize(node);
         Iterator<Path> names = relative.iterator();
-        return getImpl(names, node);
+        return getImpl(names, node, false);
     }
 
-    private FSNode getImpl(Iterator<Path> names, Path node) {
+    FSNode remove(Path node) {
+        Path relative = path.relativize(node);
+        Iterator<Path> names = relative.iterator();
+        return getImpl(names, node, true);
+    }
+
+    private FSNode getImpl(Iterator<Path> names, Path node, boolean remove) {
         Path name = names.next();
         FSNode child = childs.get(name);
+        
+        if(remove && child != null) {
+            childs.remove(name);
+        }
 
         if(child == null) {
             return null;
         }else if(names.hasNext() && child instanceof FSFolder) {
-            return ((FSFolder)child).getImpl(names, node);
+            return ((FSFolder)child).getImpl(names, node, remove);
         }else{
             return child;
         }
 
-    }
-
-    void remove(Path path) {
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
