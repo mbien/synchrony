@@ -86,7 +86,8 @@ public class SynchronyHost {
 
         new Thread(receiver, "receiver").start();
         new Thread(sender, "sender").start();
-
+        
+        LOG.info("host started");
     }
 
     private void startMulticastReceiver() throws InterruptedException {

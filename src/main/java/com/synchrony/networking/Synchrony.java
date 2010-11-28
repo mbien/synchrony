@@ -2,6 +2,8 @@
 package com.synchrony.networking;
 
 import com.synchrony.config.Config;
+import com.synchrony.core.DirHasher;
+import com.synchrony.ui.SynchronyUIManager;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,16 +12,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Starts the client.
  * @author blip
  * @author mbien
  */
-public class SynchronyHostStarter {
+public class Synchrony {
 
-    private static final Logger LOG = Logger.getLogger(SynchronyHostStarter.class.getName());
+    private static final Logger LOG = Logger.getLogger(Synchrony.class.getName());
 
     public static void main(String[] args) {
-
+        
         NodeListener listener = new NodeListener() {
 
             @Override
@@ -51,12 +53,24 @@ public class SynchronyHostStarter {
                 config = createDefaultConfig(configFolder, config, configPath);
             }
         }
+        
+        SynchronyUIManager ui = new SynchronyUIManager(config);
+        ui.init();
 
-        // multicast sender to distribute lookups for possible synchrony hosts
+        // networking
         SynchronyHost host = new SynchronyHost(config, listener);
-
         host.startHost();
-        LOG.info("started");
+        
+        //TODO we use currently only one folder (the first in the config)
+        List<Config.Watcher> watchers = config.watchers;
+        if(!watchers.isEmpty()) {
+            try {
+                DirHasher observer = new DirHasher(Paths.get(watchers.get(0).path));
+                observer.processEvents();
+            } catch (IOException ex) {
+                LOG.log(Level.SEVERE, "can not start dir hasher.", ex);
+            }
+        }
         
     }
         

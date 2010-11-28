@@ -1,7 +1,7 @@
 package com.synchrony.config;
 
-import com.synchrony.config.Config;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import org.junit.Test;
@@ -17,7 +17,10 @@ public class ConfigTest {
     @Test
     public void readConfig() throws IOException, URISyntaxException {
         
-        Config config = Config.read(getClass().getResource("testconfig.xml").toURI());
+        URI stream = getClass().getResource("testconfig.xml").toURI();
+        assertNotNull("config not found", stream);
+        
+        Config config = Config.read(stream);
 
         assertNotNull(config);
 
