@@ -1,19 +1,34 @@
 package com.synchrony.networking;
 
 import com.synchrony.config.Config;
+import com.synchrony.core.FSFolder;
+import com.synchrony.util.IOUtils;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.StandardProtocolFamily;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.channels.AsynchronousDatagramChannel;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.channels.SocketChannel;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -42,50 +57,74 @@ public class SynchronyHost {
     public final long DISCOVERY_INTERVAL = 5000;
     public final long TIME_TILL_DEAD = 2 * DISCOVERY_INTERVAL;
 
-    private final NodeListener listener;
+    private final NodeListener nodeListener;
+    private final MessageListener msgListener;
+    
     private final String multicastAddress;
 
-    private final int multicastPort;
+    private final int multicastSendPort;
+    private final int multicastListenPort;
+    
+    private final int tcpSendPort;
+    private final int tcpListenPort;
 
     // <ID, timestamp>
     private final Map<Node, Long> knownHosts;
 
-    SynchronyHost(Config config, NodeListener listener) {
+    SynchronyHost(Config config, NodeListener nodeListener, MessageListener msgListener) {
 
         this.multicastAddress = config.multicastaddress;
-        this.multicastPort = config.multicastport;
+        
+        this.multicastSendPort = config.multicastSendPort;
+        this.multicastListenPort = config.multicastListenPort;
+        
+        this.tcpSendPort = config.tcpSendPort;
+        this.tcpListenPort = config.tcpListenPort;
+        
         this.knownHosts = new HashMap<>();
-        this.listener = listener;
+        this.nodeListener = nodeListener;
+        this.msgListener = msgListener;
     }
 
     public void startHost() {
 
-        Runnable sender = new Runnable() {
+        Runnable mcSender = new Runnable() {
             @Override
             public void run() {
                 try {
                     startMulticastSender();
-                } catch (InterruptedException ex) {
+                } catch (final InterruptedException | UnknownHostException ex) {
                     throw new RuntimeException(ex);
-                } catch (UnknownHostException ex) {
-                    throw new RuntimeException("something is seriously wrong", ex);
                 }
             }
         };
         
-        Runnable receiver = new Runnable() {
+        Runnable mcReceiver = new Runnable() {
             @Override
             public void run() {
                 try {
                     startMulticastReceiver();
-                } catch (InterruptedException ex) {
+                } catch (final InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        };
+        
+        Runnable tcpServer = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    startTCPServer();
+                } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
         };
 
-        new Thread(receiver, "receiver").start();
-        new Thread(sender, "sender").start();
+        new Thread(mcReceiver, "discovery receiver").start();
+        new Thread(mcSender, "discovery sender").start();
+        
+        new Thread(tcpServer, "tcpSender").start();
         
         LOG.info("host started");
     }
@@ -94,15 +133,16 @@ public class SynchronyHost {
 
         byte[] bytes = new byte[MAGIC_STRING.getBytes().length];
 
-        // direct bytebuffer (outside heap)
-        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder());
+        // direct bytebuffer
+        ByteBuffer buffer = IOUtils.newDirectByteBuffer(bytes.length);
 
         while (true) {
             
             AsynchronousDatagramChannel channel = null;
             try{
+//                channel = DatagramChannel.open(StandardProtocolFamily.INET);
                 channel = AsynchronousDatagramChannel.open(StandardProtocolFamily.INET, null);
-                channel.bind(new InetSocketAddress(multicastPort));
+                channel.bind(new InetSocketAddress(multicastListenPort));
 
                 Future<SocketAddress> future = channel.receive(buffer); // non blocking
 
@@ -111,28 +151,24 @@ public class SynchronyHost {
 
                 // get a list of the localhosts IP addresses for filtering
                 Set<String> myIPs = getOwnIPs();
-                
+
                 //drop own packages
-                if (!myIPs.contains(senderAddress.getHostAddress())) {
+//                if (!myIPs.contains(senderAddress.getHostAddress())) {
 
                     buffer.rewind();
                     buffer.get(bytes);
 
                     synchronized(knownHosts) {
-                        Node node = new Node(senderAddress.getHostName()+"_hash"+hashCode(), senderAddress);
+                        Node node = new Node(this, senderAddress.getHostName()+"_"+hashCode(), senderAddress);
                         Long old = knownHosts.put(node, System.currentTimeMillis());
-                        if(old != null) {
+                        if(old == null) {
                             // new host discovered
-                            listener.nodeDiscovered(node, new ArrayList<Node>(knownHosts.keySet()));
+                            nodeListener.nodeDiscovered(node, new ArrayList<>(knownHosts.keySet()));
                         }
                     }
 
-                }
-            }catch(TimeoutException ex) {
-                LOG.log(Level.WARNING, "timeout, continuing", ex);
-            }catch(IOException ex) {
-                LOG.log(Level.WARNING, "continuing", ex);
-            }catch(ExecutionException ex) {
+//                }
+            }catch(final IOException | ExecutionException | TimeoutException ex) {
                 LOG.log(Level.WARNING, "continuing", ex);
             }finally{
                 if(channel != null) {
@@ -152,12 +188,10 @@ public class SynchronyHost {
         byte[] bytes = MAGIC_STRING.getBytes();
 
         InetAddress address = InetAddress.getByName(multicastAddress);
-        DatagramPacket dgram = new DatagramPacket(bytes, bytes.length, address, multicastPort);
+        DatagramPacket dgram = new DatagramPacket(bytes, bytes.length, address, multicastSendPort);
 
         while (true) {
-            DatagramSocket socket = null;
-            try{
-                socket = new DatagramSocket();
+            try(DatagramSocket socket = new DatagramSocket()) {
 
                 synchronized(knownHosts) {
                     long time = System.currentTimeMillis();
@@ -169,7 +203,7 @@ public class SynchronyHost {
                     }
                     for (Node node : keysToRemove) {
                         knownHosts.remove(node);
-                        listener.nodeLost(node, new ArrayList<Node>(knownHosts.keySet()));
+                        nodeListener.nodeLost(node, new ArrayList<>(knownHosts.keySet()));
                     }
                     
                 }
@@ -177,12 +211,96 @@ public class SynchronyHost {
                 socket.send(dgram);
             }catch(IOException ex) {
                 LOG.log(Level.WARNING, "", ex);
-            }finally{
-                if(socket != null) {
-                    socket.close();
-                }
             }
             Thread.sleep(DISCOVERY_INTERVAL);
+        }
+    }
+
+    private void startTCPServer() throws IOException {
+        
+        ServerSocket ss = new ServerSocket(tcpListenPort);
+        
+        while(true) {
+            try (Socket socket = ss.accept()) {
+                try (InputStream is = socket.getInputStream()) {
+                    MsgHeader msg = MsgHeader.load(is);
+                    
+                    LOG.info("received "+msg.toString());
+                    msgListener.onMessage(msg, socket);
+                }catch(IOException ex){
+                    LOG.log(Level.WARNING, "", ex);
+                }
+            }
+        }
+        
+    }
+
+    FSFolder requestStatus(Node node) throws IOException {
+        
+        try (Socket socket = new Socket(node.getAddress(), tcpSendPort);
+             OutputStream os = socket.getOutputStream()) {
+            
+            MsgHeader.STATUS_REQUEST.write(os);
+            
+            // receive
+            try (InputStream is = socket.getInputStream();
+                 ObjectInputStream ois = new ObjectInputStream(is)) {
+                return (FSFolder) ois.readObject();
+            } catch (ClassNotFoundException ex) {
+                throw new IOException("incompatible protocol", ex);
+            }
+        }
+    }
+
+    void sync(Node node, final Path root, List<String> localNew, List<String> remoteNew) throws IOException {
+        LOG.info("syncing...");
+        
+        final ByteBuffer buffer = IOUtils.newDirectByteBuffer(10000);
+        
+        if(!localNew.isEmpty()) {
+            uploadFiles(node.getAddress(), localNew, root, buffer);
+        }
+        
+        LOG.info("sync done");
+        
+    }
+
+    private void uploadFiles(final InetAddress address, List<String> files, final Path root, final ByteBuffer buffer) throws IOException {
+
+        for (String local : files) {
+            Path path = Paths.get(local);
+            
+            if(IOUtils.isDirectory(path)) {
+                Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes bfa) throws IOException {
+                        uploadFile(address, file, root, buffer);
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            }else{
+                uploadFile(address, path, root, buffer);
+            }
+        }
+    }
+    
+    private void uploadFile(InetAddress address, Path file, Path root, ByteBuffer buffer) throws IOException {
+        
+        Path relPath = root.relativize(file);
+        
+        try (SocketChannel sc = SocketChannel.open()) {
+            
+            sc.connect(new InetSocketAddress(address, tcpSendPort));
+            
+            OutputStream os = sc.socket().getOutputStream();
+            MsgHeader.SYNC_UPLOAD.write(os);
+            
+            ObjectOutputStream oos = new ObjectOutputStream(os);
+            
+            try (SeekableByteChannel fc = file.newByteChannel()) {
+                oos.writeObject(relPath.toString());
+                IOUtils.transfer(fc, sc, buffer);
+            }
         }
     }
 

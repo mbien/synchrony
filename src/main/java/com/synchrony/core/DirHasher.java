@@ -45,7 +45,8 @@ public class DirHasher implements FSEventListener {
 
     public DirHasher(Path dir) throws IOException {
 
-        root = new FSFolder(dir);
+        root = new FSFolder(null, dir);
+        System.out.println(root.getFullPath());
         
         recentlyDeleted = new LinkedList<>();
         try {
@@ -325,6 +326,14 @@ public class DirHasher implements FSEventListener {
 
     private Path getHashFileName(Path dest) {
         return Paths.get(dest + "." + hashBuilder.HASH_ALGORITHM);
+    }
+    
+    public FSFolder getSnapshot() {
+        return root.clone();
+    }
+    
+    public Path getRootDir() {
+        return rootDir;
     }
 
     // for manual testing

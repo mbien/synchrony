@@ -11,8 +11,12 @@ public class FSFile extends FSNode {
 
     private byte[] hash = null;
 
-    FSFile(/*FSFolder parent, */Path path, byte[] hash, BasicFileAttributes attrs) {
-        super(path);
+    FSFile(Path path, byte[] hash, BasicFileAttributes attrs) {
+        this(null, path, hash, attrs);
+    }
+    
+    FSFile(FSFolder parent, Path path, byte[] hash, BasicFileAttributes attrs) {
+        super(parent, path);
         this.hash = hash;
     }
 
@@ -38,6 +42,12 @@ public class FSFile extends FSNode {
 
     @Override
     public String toString() {
-        return path.getName() + "[" + getHexString(hash)+ "]";
+        return name.getName() + "[" + getHexString(hash)+ "]";
     }
+
+    @Override
+    public FSFile clone() {
+        return new FSFile(parent, name, hash, null);
+    }
+    
 }

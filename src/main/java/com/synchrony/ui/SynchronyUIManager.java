@@ -60,7 +60,7 @@ public class SynchronyUIManager {
     private void initUI() {
         try {
             SystemTray tray = SystemTray.getSystemTray();
-            Image image = Toolkit.getDefaultToolkit().getImage("synchrony-logo.gif");
+            Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("synchrony-logo.gif"));
 
             JPopupMenu menu = new JPopupMenu("common");
             

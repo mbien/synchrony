@@ -24,9 +24,11 @@ public class ConfigTest {
 
         assertNotNull(config);
 
-        assertEquals(config.multicastport, 5001);
-        assertEquals(config.unicastport, 5001);
-        assertEquals(config.heartbeat, 5000);
+        assertEquals(5001, config.multicastSendPort);
+        assertEquals(5001, config.multicastListenPort);
+        assertEquals(6001, config.tcpSendPort);
+        assertEquals(6001, config.tcpListenPort);
+        assertEquals(10000, config.heartbeat);
 
         List<Config.Watcher> watchers = config.watchers;
         assertNotNull(watchers);

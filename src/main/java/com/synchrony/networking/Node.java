@@ -4,7 +4,10 @@
 
 package com.synchrony.networking;
 
+import com.synchrony.core.FSFolder;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -14,25 +17,27 @@ import java.util.Objects;
 public class Node {
     
     private final String name;
-
-    private byte[] sessionKeyReceive = null;
-
-    private  byte[] sessionKeySend = null;
     
     private final InetAddress address;
+    private final SynchronyHost host;
 
 
-    Node(String hostAddress, InetAddress address) {
+    Node(SynchronyHost host, String hostAddress, InetAddress address) {
         this.name = hostAddress;
         this.address = address;
+        this.host = host;
     }
 
-    public void setSessionKeyReceive(byte[] key) {
-        this.sessionKeyReceive = key;
-    }
-    
-    public void setSessionKeySend(byte[] key) {
-        this.sessionKeySend = key;
+    void initialSync(FSFolder localSnapshot) throws IOException {
+        FSFolder remoteSnapshot = host.requestStatus(this);
+        
+        List<String> localNew = localSnapshot.substract(remoteSnapshot);
+        List<String> remoteNew = remoteSnapshot.substract(localSnapshot);
+        
+        System.out.println("local new:  "+ localNew);
+        System.out.println("remote new: "+ remoteNew);
+        host.sync(this, localSnapshot.getPath(), localNew, remoteNew);
+        
     }
 
     public InetAddress getAddress() {

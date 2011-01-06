@@ -1,9 +1,12 @@
 package com.synchrony.core;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  *
@@ -11,29 +14,30 @@ import java.util.LinkedHashMap;
  */
 public class FSFolder extends FSNode {
 
-    HashMap<Path, FSNode> childs;
+    //<name, node>
+    HashMap<String, FSNode> childs;
 
-    public FSFolder(/*FSFolder parent, */Path path) {
-        super(path);
+    public FSFolder(FSFolder parent, Path path) {
+        super(parent, path);
         this.childs = new LinkedHashMap<>();
     }
 
     void insert(FSNode node) {
-        Path relative = path.relativize(node.path);
+        Path relative = name.relativize(node.name);
 
-        Path name = null;
+        Path segment = null;
         FSFolder current = this;
         int i = 0;
         for (Iterator<Path> names = relative.iterator(); names.hasNext();) {
             i++;
 
-            name = names.next();
-            FSNode child = current.childs.get(name);
+            segment = names.next();
+            FSNode child = current.childs.get(segment.toString());
 
             if(child == null) {
                 if(names.hasNext()) {
-                    FSFolder folder = new FSFolder(current.path.resolve(name));
-                    current.childs.put(name, folder);
+                    FSFolder folder = new FSFolder(current, current.name.resolve(segment));
+                    current.childs.put(segment.toString(), folder);
                     current = folder;
                 }
             }else{
@@ -43,29 +47,30 @@ public class FSFolder extends FSNode {
         
         //already added?
         if(!current.equals(node)) {
-            current.childs.put(name, node);
+            current.childs.put(segment.toString(), node);
+            node.parent = current;
         }
 
     }
 
     FSNode get(Path node) {
-        Path relative = path.relativize(node);
+        Path relative = name.relativize(node);
         Iterator<Path> names = relative.iterator();
         return getImpl(names, node, false);
     }
 
     FSNode remove(Path node) {
-        Path relative = path.relativize(node);
+        Path relative = name.relativize(node);
         Iterator<Path> names = relative.iterator();
         return getImpl(names, node, true);
     }
 
     private FSNode getImpl(Iterator<Path> names, Path node, boolean remove) {
-        Path name = names.next();
-        FSNode child = childs.get(name);
+        String segment = names.next().toString();
+        FSNode child = childs.get(segment);
         
         if(remove && child != null) {
-            childs.remove(name);
+            childs.remove(segment);
         }
 
         if(child == null) {
@@ -78,13 +83,63 @@ public class FSFolder extends FSNode {
 
     }
 
+    public List<String> substract(FSFolder otherFolder) {
+        return substract(otherFolder, null);
+    }
+    
+    public List<String> substract(FSFolder otherFolder, List<String> list) {
+        
+        if(list == null) {
+            list = new ArrayList<>();
+        }
+        
+        for (Entry<String, FSNode> child : childs.entrySet()) {
+            
+            boolean found = false;
+            FSNode node = child.getValue();
+            FSNode otherNode = null;
+            for (Entry<String, FSNode> otherChild : otherFolder.childs.entrySet()) {
+                otherNode = otherChild.getValue();
+                if(otherNode.getName().equals(node.getName())) {
+                    found = true;
+                    break;
+                }
+            }
+            
+            // local node is new (file or folder)
+            if(!found) {
+                list.add(child.getValue().getFullPath());
+            // check folders
+            }else if(node instanceof FSFolder){
+                if(otherNode instanceof FSFolder) {
+                    list.addAll(((FSFolder)node).substract(((FSFolder)otherNode)));
+                }else{
+                    // TODO folder vs file conflict
+                }
+            }
+            
+        }
+        
+        return list;
+    }
+        
+
     @Override
     public String toString() {
-        String str = path.toString()+childs;
+        String str = name.toString()+childs;
 //        for (FSNode node : childs.values()) {
 //            str += "\n"+node;
 //        }
         return str;
     }
 
+    @Override
+    public FSFolder clone() {
+        FSFolder clone = new FSFolder(null, name);
+        for (FSNode node : childs.values()) {
+            clone.insert((FSNode)node.clone());
+        }
+        return clone;
+    }
+    
 }

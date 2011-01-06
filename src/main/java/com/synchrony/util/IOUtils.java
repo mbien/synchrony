@@ -1,6 +1,10 @@
 package com.synchrony.util;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -54,7 +58,7 @@ public class IOUtils {
         });
 
     }
-
+    
     /**
      * @see java.​nio.​file.​attribute.​FileTime#compareTo(FileTime other)
      */
@@ -94,6 +98,25 @@ public class IOUtils {
 
     public static boolean isDirectory(Path entry) throws IOException {
         return readBasicAtributes(entry).isDirectory();
+    }
+    
+    public static void transfer(ReadableByteChannel src, WritableByteChannel dest, ByteBuffer buffer) throws IOException {
+        buffer.clear();
+        while(src.read(buffer) != -1) {
+            buffer.flip();
+            dest.write(buffer);
+            buffer.compact();
+        }
+        
+        // EOF will leave buffer in fill state
+        buffer.flip();
+        while (buffer.hasRemaining()) {
+          dest.write(buffer);
+        }
+    }
+    
+    public static ByteBuffer newDirectByteBuffer(int length) {
+        return ByteBuffer.allocateDirect(length).order(ByteOrder.nativeOrder());
     }
 
 }

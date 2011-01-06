@@ -11,9 +11,12 @@
 
     <multicastaddress>224.0.0.1</multicastaddress>
     
-    <multicastport>5001</multicastport>
-    <unicastport>5001</unicastport>
-    <heartbeat>5000</heartbeat>
+    <multicastaddress>localhost</multicastaddress>
+    <multicastSendPort>5001</multicastSendPort>
+    <multicastListenPort>5001</multicastListenPort>
+    <tcpSendPort>6001</tcpSendPort>
+    <tcpListenPort>6001</tcpListenPort>
+    <heartbeat>10000</heartbeat>
 
     <watcher name="folder1">
         <enabled>true</enabled>

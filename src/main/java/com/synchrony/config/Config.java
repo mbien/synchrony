@@ -36,10 +36,16 @@ public class Config {
     public String multicastaddress;
 
     @XmlElement(required=true)
-    public int multicastport;
+    public int multicastSendPort;
+    
+    @XmlElement(required=true)
+    public int multicastListenPort;
 
     @XmlElement(required=true)
-    public int unicastport;
+    public final int tcpSendPort;
+
+    @XmlElement(required=true)
+    public final int tcpListenPort;
 
     @XmlElement(required=true)
     public int heartbeat;
@@ -69,16 +75,19 @@ public class Config {
     private URI uri;
 
     private Config() {
-        multicastport = 0;
-        unicastport = 0;
+        multicastSendPort = 0;
+        tcpSendPort = 0;
+        tcpListenPort = 0;
         heartbeat = 0;
-        watchers = null;
+        watchers = new ArrayList<>();
     }
 
-    private Config(String multicastAddress, int multicastport, int unicastport, int heartbeat) {
+    private Config(String multicastAddress, int multicastSendPort, int multicastListenPort, int tcpSendPort, int tcpListenPort, int heartbeat) {
         this.multicastaddress = multicastAddress;
-        this.multicastport = multicastport;
-        this.unicastport = unicastport;
+        this.multicastSendPort = multicastSendPort;
+        this.multicastListenPort = multicastListenPort;
+        this.tcpSendPort = tcpSendPort;
+        this.tcpListenPort = tcpListenPort;
         this.heartbeat = heartbeat;
         this.watchers = new ArrayList<>();
     }
@@ -93,7 +102,7 @@ public class Config {
     }
 
     public static Config getDefault() {
-        return new Config("224.0.0.1", 5001, 5001, 10000);
+        return new Config("224.0.0.1", 5001, 5001, 6000, 6000, 10000);
     }
 
 
@@ -122,9 +131,7 @@ public class Config {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(this, new FileOutputStream(new File(url)));
-        } catch (JAXBException ex) {
-            throw new IOException(ex);
-        } catch (FileNotFoundException ex) {
+        } catch (final JAXBException | FileNotFoundException ex) {
             throw new IOException(ex);
         }
     }
