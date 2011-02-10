@@ -6,6 +6,7 @@ import com.synchrony.config.Config.Watcher;
 import com.synchrony.core.DirHasher;
 import com.synchrony.core.FSFolder;
 import com.synchrony.ui.SynchronyUIManager;
+import com.synchrony.ui.notification.NotificationService;
 import com.synchrony.util.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +38,7 @@ public class Synchrony {
         
         Config config = readConfig();
         
-        SynchronyUIManager ui = new SynchronyUIManager(config);
+        final SynchronyUIManager ui = new SynchronyUIManager(config);
         ui.init();
         
         DirHasher observer = null;
@@ -65,12 +66,16 @@ public class Synchrony {
                 } catch (IOException ex) {
                     LOG.log(Level.SEVERE, null, ex);
                 }
+                
+                ui.getNotificationService().showNotification("synchrony", "initial sync with "+node+" finished");
             }
 
             @Override
             public void nodeLost(Node node, List<Node> all) {
                 System.out.println("node died "+node);
                 System.out.println("all nodes: "+all);
+                
+                ui.getNotificationService().showNotification("synchrony", node+" disconnected");
             }
         };
         
@@ -135,7 +140,7 @@ public class Synchrony {
             config = createDefaultConfig(configFolder, config, configPath);
         }else{
             try {
-                LOG.info("reading configuration.");
+                LOG.info("reading configuration ["+configFolder+"]");
                 config = Config.read(configPath.toUri());
             } catch (IOException ex) {
                 // TODO maybe a little bit to radical

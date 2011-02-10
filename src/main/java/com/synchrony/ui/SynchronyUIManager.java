@@ -4,6 +4,7 @@
 package com.synchrony.ui;
 
 import com.synchrony.config.Config;
+import com.synchrony.ui.config.ConfigurationFrame;
 import com.synchrony.ui.notification.NotificationService;
 import com.synchrony.ui.tray.JPopupTrayIcon;
 import java.awt.AWTException;
@@ -38,6 +39,7 @@ public class SynchronyUIManager {
     }
     
     private final Config config;
+    private NotificationService notserve;
 
     public SynchronyUIManager(Config config) {
         this.config = config;
@@ -60,7 +62,7 @@ public class SynchronyUIManager {
     private void initUI() {
         try {
             SystemTray tray = SystemTray.getSystemTray();
-            Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("synchrony-logo.gif"));
+            Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("synchrony-logo.png"));
 
             JPopupMenu menu = new JPopupMenu("common");
             
@@ -73,12 +75,13 @@ public class SynchronyUIManager {
             menu.add(quit);
             
             quit.addActionListener(exitAction());
+            options.addActionListener(configureAction());
 
             JPopupTrayIcon icon = new JPopupTrayIcon(image, "synchrony", menu);
             icon.setImageAutoSize(true);
             tray.add(icon);
 
-            NotificationService notserve = NotificationService.getDefault(icon);
+            notserve = NotificationService.getDefault(icon);
 //            notserve.showNotification("test", "foobar");
 
         } catch (AWTException ex) {
@@ -86,11 +89,26 @@ public class SynchronyUIManager {
         }
     }
 
+    public NotificationService getNotificationService() {
+        return notserve;
+    }
+    
+
     private ActionListener exitAction() {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 System.exit(0);
+            }
+        };
+    }
+
+    private ActionListener configureAction() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                ConfigurationFrame frame = new ConfigurationFrame(config);
+                frame.setVisible(true);
             }
         };
     }

@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "")
 @XmlRootElement(name = "config")
-public class Config {
+public class Config implements Cloneable {
 
     @XmlElement(required=true)
     public String multicastaddress;
@@ -134,6 +134,14 @@ public class Config {
         } catch (final JAXBException | FileNotFoundException ex) {
             throw new IOException(ex);
         }
+    }
+
+    @Override
+    public Config clone() {
+        Config config = new Config(multicastaddress, multicastSendPort, multicastListenPort, tcpSendPort, tcpListenPort, heartbeat);
+        config.setURI(uri);
+        config.watchers.addAll(watchers);
+        return config;
     }
 
 }
