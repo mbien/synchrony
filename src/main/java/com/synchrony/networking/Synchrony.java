@@ -7,6 +7,7 @@ import com.synchrony.core.DirHasher;
 import com.synchrony.core.FSFolder;
 import com.synchrony.ui.SynchronyUIManager;
 import com.synchrony.ui.notification.NotificationService;
+import com.synchrony.util.FSEventListener;
 import com.synchrony.util.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.concurrent.DelayQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -101,7 +103,9 @@ public class Synchrony {
                         System.out.println("dest path: "+destPath);
                         
                         Files.createDirectories(destPath.getParent());
-                        destPath.createFile();
+                        if(!destPath.exists()){
+                            destPath.createFile();
+                        }
                         
                         try (ReadableByteChannel inputChannel = Channels.newChannel(is);
                              WritableByteChannel outputChannel = destPath.newByteChannel(StandardOpenOption.WRITE)) {
@@ -118,8 +122,54 @@ public class Synchrony {
         };
 
         // networking
-        SynchronyHost host = new SynchronyHost(config, nodeListener, msgListener);
+        final SynchronyHost host = new SynchronyHost(config, nodeListener, msgListener);
         host.startHost();
+        
+        observer.addFSListener(new FSEventListener() {
+            
+            @Override
+            public void entryCreated(Path dir, Path child) {
+                sync(1000);
+            }
+
+            @Override
+            public void entryModified(Path path) {
+                sync(5000);
+            }
+
+            @Override
+            public void entryDeleted(Path path) {
+            }
+            
+            private void sync(final int delay) {
+                System.out.println(" - - - - - sync- - - - ");
+                
+                // delay
+                new Thread("updater") {
+
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(delay);
+                            
+                            List<Node> nodes = host.getKnownNodes();
+                            for (Node node : nodes) {
+                                try {
+                                    node.initialSync(_observer.getSnapshot());
+                                } catch (IOException ex) {
+                                    LOG.log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        } catch (InterruptedException ex) {
+                            LOG.log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    
+                }.start();
+                
+            }
+            
+        });
         
         // start listening on system events
         try {

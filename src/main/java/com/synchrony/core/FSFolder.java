@@ -2,6 +2,7 @@ package com.synchrony.core;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -101,8 +102,16 @@ public class FSFolder extends FSNode {
             for (Entry<String, FSNode> otherChild : otherFolder.childs.entrySet()) {
                 otherNode = otherChild.getValue();
                 if(otherNode.getName().equals(node.getName())) {
-                    found = true;
-                    break;
+                    if(otherNode instanceof FSFile && node instanceof FSFile){
+                        if(Arrays.equals(((FSFile)otherNode).getHash(), ((FSFile)node).getHash())) {
+                            found = true;
+                            break;
+                        }
+                    }else{
+                        found = true;
+                        break;
+                    }
+                        
                 }
             }
             

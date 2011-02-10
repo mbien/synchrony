@@ -1,5 +1,6 @@
 package com.synchrony.core;
 
+import java.util.ArrayList;
 import com.synchrony.util.RecursiveDirWatcher;
 import com.synchrony.util.HashBuilder;
 import com.synchrony.util.FSEventListener;
@@ -17,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
@@ -42,10 +44,14 @@ public class DirHasher implements FSEventListener {
     private RecursiveDirWatcher watcher;
 
     private final FSFolder root;
+    
+    private List<FSEventListener> listeners;
 
     public DirHasher(Path dir) throws IOException {
 
         root = new FSFolder(null, dir);
+        listeners = new ArrayList<>();
+        
         System.out.println(root.getFullPath());
         
         recentlyDeleted = new LinkedList<>();
@@ -118,6 +124,11 @@ public class DirHasher implements FSEventListener {
         root.remove(path);
 
         System.out.println(root);
+        
+        for (FSEventListener listener : listeners) {
+            listener.entryDeleted(path);
+        }
+        
     }
 
     public void entryCreated(Path dir, Path file) {
@@ -162,6 +173,11 @@ public class DirHasher implements FSEventListener {
         } catch (IOException ex) {
             Logger.getLogger(DirHasher.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        for (FSEventListener listener : listeners) {
+            listener.entryCreated(dir, file);
+        }
+        
     }
 
     public void entryModified(Path path) {
@@ -169,6 +185,11 @@ public class DirHasher implements FSEventListener {
         updateHashFile(path);
 
         System.out.println(root);
+        
+        for (FSEventListener listener : listeners) {
+            listener.entryModified(path);
+        }
+        
     }
 
     private void updateHashFile(final Path child) {
@@ -322,6 +343,14 @@ public class DirHasher implements FSEventListener {
     private Path resolveHashFileDestination(Path path) {
         Path dest = path.subpath(rootDir.getNameCount(), path.getNameCount());
         return rootDir.resolve(CHECKSUM_FOLDER).resolve(dest);
+    }
+    
+    public void addFSListener(FSEventListener listener) {
+        listeners.add(listener);
+    }
+    
+    public boolean removeFSListener(FSEventListener listener) {
+        return listeners.remove(listener);
     }
 
     private Path getHashFileName(Path dest) {

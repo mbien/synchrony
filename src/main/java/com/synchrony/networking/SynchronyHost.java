@@ -327,4 +327,11 @@ public class SynchronyHost {
         return ips;
 
     }
+    
+    public List<Node> getKnownNodes() {
+        synchronized(knownHosts) {
+            return new ArrayList<>(knownHosts.keySet());
+        }
+    }
+    
 }
