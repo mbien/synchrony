@@ -4,9 +4,16 @@
  */
 package com.synchrony.security;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 import org.junit.Before;
 import org.junit.After;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static junit.framework.Assert.*;
@@ -58,7 +65,42 @@ public class CrypToolTest {
      * and then decrypted again using Streams.
      */
     @Test
-    public void testStreamEncryptionAndDecrytion() {
+    public void testStreamEncryption() throws FileNotFoundException {
+        try {
+            // FileInputStream fis = new FileInputStream("/home/blip/Downloads/netbeans-6.9.1-ml-java-linux.sh");
+            String testfile = "/home/blip/Downloads/1_Einfuhrung.pdf";
+            FileInputStream fis = new FileInputStream(testfile);
+            //ByteArrayInputStream bis = CrypToolUtil.InputStreamToByteArrayInputStream(fis);
+            FileOutputStream fos = new FileOutputStream("/tmp/encfile");
+            CrypTool.encryptStream(fis, password.getBytes(), fos);
+            fis.close();
+            fos.close();
+            System.out.println("File sucessfully encrypted (File: " + testfile + ")");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * A large plaintext, i.e. a file of some MBs, should be encrypted
+     * and then decrypted again using Streams.
+     */
+    @Test
+    public void testStreamDecryption() throws FileNotFoundException {
+        try {
+            // FileInputStream fis = new FileInputStream("/home/blip/Downloads/netbeans-6.9.1-ml-java-linux.sh");
+            String cipherfile = "/tmp/encfile";
+            FileInputStream fis = new FileInputStream(cipherfile);
+            FileOutputStream fos = new FileOutputStream("/tmp/plaintext.pdf");
+            CrypTool.decryptStream(fis, password.getBytes(), fos);
+            fis.close();
+            fos.close();
+            System.out.println("File sucessfully decrypted (File: " + cipherfile + ")");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -104,13 +146,13 @@ public class CrypToolTest {
         String key = CrypToolUtil.generateRandomString(CrypTool.PASSWORD_SIZE);
 
         System.out.println("z: \t" + CrypToolUtil.byteArrayToHexString(z.getBytes()));
-        System.out.println("key: \t" +CrypToolUtil.byteArrayToHexString(key.getBytes()));
+        System.out.println("key: \t" + CrypToolUtil.byteArrayToHexString(key.getBytes()));
 
         byte[] xorByteArray = CrypToolUtil.xorByteArray(z.getBytes(), key.getBytes());
-        System.out.println("Xor: \t" +CrypToolUtil.byteArrayToHexString(xorByteArray));
+        System.out.println("Xor: \t" + CrypToolUtil.byteArrayToHexString(xorByteArray));
 
         xorByteArray = CrypToolUtil.xorByteArray(key.getBytes(), xorByteArray);
-        System.out.println("Xor² (z again): \t" +CrypToolUtil.byteArrayToHexString(xorByteArray));
+        System.out.println("Xor² (z again): \t" + CrypToolUtil.byteArrayToHexString(xorByteArray));
 
 
         System.out.println(CrypToolUtil.byteArrayToHexString(CrypToolUtil.xorByteArray(z.getBytes(), key.getBytes())));
