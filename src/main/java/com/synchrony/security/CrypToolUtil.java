@@ -4,6 +4,10 @@
  */
 package com.synchrony.security;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import javax.imageio.stream.FileImageInputStream;
+
 /**
  *
  * @author blip
@@ -61,7 +65,7 @@ public class CrypToolUtil {
     public static String fitToPasswordLength(String string) {
         int stringLength = string.length();
         int passwordLength = CrypTool.PASSWORD_SIZE;
-        
+
         if (stringLength > passwordLength) {
             string = string.substring(0, passwordLength);
         } else if (stringLength < passwordLength) {
@@ -72,8 +76,6 @@ public class CrypToolUtil {
         }
         return string;
     }
-
-
     /** The random number generator. */
     protected static java.util.Random r = new java.util.Random();
 
@@ -113,5 +115,21 @@ public class CrypToolUtil {
             c[i] = (byte) (a[i] ^ b[i]);
         }
         return c;
+    }
+
+    public static ByteArrayInputStream InputStreamToByteArrayInputStream(FileInputStream fis) {
+
+        byte currentBytes[] = fis.toString().getBytes();
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentBytes);
+
+        try {
+
+            while (byteArrayInputStream.read() != -1) {
+                System.out.println(byteArrayInputStream.read());
+            }
+
+        } catch (Exception e) {
+        }
+        return byteArrayInputStream;
     }
 }

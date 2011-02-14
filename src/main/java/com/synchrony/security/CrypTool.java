@@ -6,6 +6,8 @@ package com.synchrony.security;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -81,29 +83,30 @@ public class CrypTool {
 
     }
 
-    public static CipherOutputStream encryptStream(ByteArrayInputStream plainData, byte[] password) throws Exception {
+    public static void encryptStream(InputStream plainData, byte[] password, OutputStream os) throws Exception {
         Cipher cipher = initCipher(password, Cipher.ENCRYPT_MODE);
 
         byte[] byteBuffer = new byte[BLOCK_SIZE];
 
-        CipherOutputStream encryptedData = new CipherOutputStream(new ByteArrayOutputStream(byteBuffer.length), cipher);
+        CipherOutputStream encryptedData = new CipherOutputStream(os, cipher);
 
         for (int n; (n = plainData.read(byteBuffer)) != -1; encryptedData.write(byteBuffer, 0, n));
 
-        return encryptedData;
+        encryptedData.close();
     }
 
-    public static ByteArrayOutputStream decryptStream(ByteArrayInputStream encryptedData, byte[] password) throws Exception {
+    public static void decryptStream(InputStream encryptedData, byte[] password, OutputStream os) throws Exception {
         Cipher cipher = initCipher(password, Cipher.DECRYPT_MODE);
 
         byte[] byteBuffer = new byte[BLOCK_SIZE];
 
-        CipherInputStream in = new CipherInputStream(encryptedData, cipher);
-        ByteArrayOutputStream plainData = new ByteArrayOutputStream(byteBuffer.length);
+        CipherInputStream decryptedData = new CipherInputStream(encryptedData, cipher);
 
-        for (int n; (n = encryptedData.read(byteBuffer)) != -1; plainData.write(byteBuffer, 0, n));
+        for (int n; (n = decryptedData.read(byteBuffer)) != -1; os.write(byteBuffer, 0, n));
 
-        return plainData;
+        decryptedData.close();
+
+
     }
 
     public static Cipher initCipher(byte[] password, int mode) throws Exception {
